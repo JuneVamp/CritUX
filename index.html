@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Critical UX: Data Surveillance Prototype</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- GAME VIEW (LEFT) -->
+        <div class="game-area">
+            <div class="game-canvas" id="gameCanvas">
+                <!-- Background will be set via JS -->
+            </div>
+            <!-- Hotspot overlays for clickable areas -->
+            <div class="hotspots-container" id="hotspotsContainer"></div>
+        </div>
+
+        <!-- PHONE UI (RIGHT) -->
+        <div class="phone-area">
+            <div class="phone-frame">
+                <div class="phone-status-bar">
+                    <span class="time" id="phoneTime">9:41</span>
+                    <span class="signal">📶</span>
+                </div>
+                <div class="phone-screen">
+                    <!-- PHONE CONTENT CYCLES BETWEEN STATES -->
+                    <div class="phone-state" id="phoneLoginState" style="display: none;">
+                        <div class="login-form">
+                            <h2>Login</h2>
+                            <input type="email" id="emailInput" placeholder="Email" />
+                            <button id="loginSubmitBtn">Submit</button>
+                            <p class="form-hint">Check email for OTP</p>
+                        </div>
+                    </div>
+
+                    <div class="phone-state" id="phoneOTPState" style="display: none;">
+                        <div class="otp-form">
+                            <h2>Enter OTP</h2>
+                            <p class="otp-hint">Check your inbox below, copy the code from the email</p>
+                            <input type="text" id="otpInput" placeholder="6-digit code" maxlength="6" />
+                            <button id="otpSubmitBtn">Confirm</button>
+                        </div>
+                    </div>
+
+                    <div class="phone-state" id="phoneInboxState">
+                        <div class="inbox-header">
+                            <h2>Inbox</h2>
+                            <span class="email-count" id="emailCount">0</span>
+                        </div>
+                        <div class="email-list" id="emailList">
+                            <!-- Emails rendered here -->
+                        </div>
+                    </div>
+
+                    <div class="phone-state" id="phoneEmailDetailState" style="display: none;">
+                        <div class="email-detail">
+                            <button class="back-btn" id="backToInboxBtn">← Back</button>
+                            <div class="email-header">
+                                <h3 id="emailDetailFrom">From: sender@email.com</h3>
+                                <p id="emailDetailSubject">Subject</p>
+                                <small id="emailDetailTime">Time</small>
+                            </div>
+                            <div class="email-body" id="emailDetailBody">
+                                <!-- Email body rendered here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DIALOGUE BOX (CENTER BOTTOM) -->
+    <div class="dialogue-box" id="dialogueBox" style="display: none;">
+        <div class="dialogue-content">
+            <p id="dialogueText"></p>
+            <div class="dialogue-continue">[Click to continue]</div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <!-- Race Selection Modal -->
+    <div class="modal" id="raceSelectModal">
+        <div class="modal-content">
+            <h1>Select Your Race</h1>
+            <p>Choose a race to begin. Everything you do will require your data.</p>
+            <div class="race-options">
+                <button class="race-btn" data-race="fairy">🧚 Fairy</button>
+                <button class="race-btn" data-race="princess">👑 Princess</button>
+                <button class="race-btn" data-race="godzilla">🦣 Godzilla</button>
+                <button class="race-btn" data-race="werewolf">🐺 Werewolf</button>
+                <button class="race-btn" data-race="vampire">🧛 Vampire</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal (appears on first interaction) -->
+    <div class="modal" id="signupModal" style="display: none;">
+        <div class="modal-content">
+            <h2>Sign Up</h2>
+            <p>To continue, you must create an account. We need your data.</p>
+            <input type="email" id="signupEmailInput" placeholder="Email address" />
+            <input type="password" id="signupPasswordInput" placeholder="Password" />
+            <button id="signupSubmitBtn">Create Account</button>
+        </div>
+    </div>
+
+    <!-- Interaction Blocked Modal -->
+    <div class="modal" id="blockedModal" style="display: none;">
+        <div class="modal-content interaction-blocked">
+            <h2>⚠️ Account Restricted</h2>
+            <p id="blockedMessage">You must log in to access this.</p>
+            <button id="blockedLoginBtn">Log In</button>
+            <button class="close-modal-btn" onclick="closeBlockedModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Mart Shop Modal -->
+    <div class="modal" id="martModal" style="display: none;">
+        <div class="modal-content">
+            <button class="close-modal-btn" onclick="closeMartModal()">✕ Close</button>
+            <h2>Poké Mart</h2>
+            <div class="mart-items">
+                <!-- Items rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
