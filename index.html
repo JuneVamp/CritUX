@@ -28,19 +28,12 @@
                     <!-- PHONE CONTENT CYCLES BETWEEN STATES -->
                     <div class="phone-state" id="phoneLoginState" style="display: none;">
                         <div class="login-form">
+                            <button class="back-to-inbox-btn" id="backFromLoginBtn">← Back</button>
                             <h2>Login</h2>
-                            <input type="email" id="emailInput" placeholder="Email" />
+                            <input type="email" id="emailInput" placeholder="Email" value="abc@gmail.com" />
+                            <input type="password" id="loginPasswordInput" placeholder="Password" value="autofill" />
                             <button id="loginSubmitBtn">Submit</button>
-                            <p class="form-hint">Check email for OTP</p>
-                        </div>
-                    </div>
-
-                    <div class="phone-state" id="phoneOTPState" style="display: none;">
-                        <div class="otp-form">
-                            <h2>Enter OTP</h2>
-                            <p class="otp-hint">Check your inbox below, copy the code from the email</p>
-                            <input type="text" id="otpInput" placeholder="6-digit code" maxlength="6" />
-                            <button id="otpSubmitBtn">Confirm</button>
+                            <p class="form-hint">Login uses email + password only</p>
                         </div>
                     </div>
 
@@ -67,6 +60,11 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="phone-nav">
+                    <button id="phoneNavWeb" class="phone-nav-btn">🌐 Web</button>
+                    <button id="phoneNavEmail" class="phone-nav-btn active">✉️ Email</button>
                 </div>
             </div>
         </div>
@@ -101,9 +99,11 @@
         <div class="modal-content">
             <h2>Sign Up</h2>
             <p>To continue, you must create an account. We need your data.</p>
-            <input type="email" id="signupEmailInput" placeholder="Email address" />
-            <input type="password" id="signupPasswordInput" placeholder="Password" />
-            <button id="signupSubmitBtn">Create Account</button>
+            <input type="email" id="signupEmailInput" placeholder="Email address" value="abc@gmail.com" />
+            <input type="password" id="signupPasswordInput" placeholder="Password" value="autofill" />
+            <button id="sendSignupOtpBtn">Send OTP</button>
+            <input type="text" id="signupOtpInput" placeholder="6-digit OTP" maxlength="6" style="display: none; margin-top: 10px;" />
+            <button id="signupSubmitBtn" style="display: none; margin-top: 10px;">Create Account</button>
         </div>
     </div>
 

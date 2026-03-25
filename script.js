@@ -7,9 +7,86 @@ const gameState = {
     isLoggedIn: false,
     currentLocation: 'bed',
     currentDialogueIndex: 0,
-    selectedEmail: null,
     generatedOTP: null,
     userEmail: null,
+    userPassword: null,
+    signupOtpSent: false,
+    // Per-system logins: each hotspot acts like a separate "service"
+    serviceLogins: {},
+    pendingService: null
+};
+
+const defaultCredentials = {
+    email: 'abc@gmail.com',
+    password: 'autofill'
+};
+
+// Race-based restrictions (which hotspots/interactions are blocked for which races)
+const raceRestrictions = {
+    godzilla: {
+        park: ['park-playground'],
+        outside: ['park'],
+        plaza: ['plaza-cafe']
+    },
+    werewolf: {
+        outside: ['flowers'],
+        park: ['park-bench'],
+        mart: ['mart-shelf-2']
+    },
+    vampire: {
+        bed: ['sleep-bed'],
+        room: ['room-window'],
+        outside: ['flowers']
+    },
+    fairy: {
+        mart: ['mart-shelf-1'],
+        plaza: ['plaza-arcade']
+    },
+    princess: {
+        // Princess gets most access (ironic commentary on privilege)
+    }
+};
+
+// Per-system login flavour text for each hotspot "service"
+const serviceLoginMessages = {
+    // Bed / phone
+    'sleep-bed': 'SleepTracker™ requires a separate account to monitor your dreams.',
+    'phone-on-bed': 'PhoneID Connect: Sign in again so your phone can sync even more data.',
+
+    // Room systems
+    'room-door': 'DoorCorp™: Create an account to open doors in your own house.',
+    'room-window': 'WindowCloud®: Sunshine access requires its own login.',
+    'room-desk': 'DeskOS™: Authenticate again to use your personal computer.',
+
+    // House systems
+    'house-door': 'FrontDoor Services LLC: Separate credentials required to leave the building.',
+    'house-kitchen': 'KitchenCloud™: Log in to access food and nutritional analytics.',
+    'house-mirror': 'MirrorID®: Biometric reflection service needs its own account.',
+
+    // Outside systems
+    'flowers': 'FloraPass: Sign up to smell these flowers and share your pollen data.',
+    'park': 'ParkNet™: Neighborhood park uses a different platform. Please log in.',
+    'mart-door': 'MartAccess™: Retail entry system requires additional authentication.',
+    'npc-stranger': 'SocialLink™: Talking to strangers needs a separate social identity login.',
+
+    // Park systems
+    'park-playground': 'Playground Plus: Child-safe fun behind yet another account wall.',
+    'park-bench': 'BenchReserve™: Sitting services require recurring authentication.',
+    'park-exit': 'ExitGate Cloud: Even leaving the park needs a separate login.',
+
+    // Mart systems
+    'mart-shelf-1': 'ShelfID Potions: Browse potions with your dedicated inventory account.',
+    'mart-shelf-2': 'ShelfID Balls: A different vendor, a different login.',
+    'mart-checkout': 'PayLink™ Checkout: Payment processing is managed by another provider.',
+    'mart-exit': 'StoreGate™: Exiting the mart uses its own security system.',
+
+    // Plaza systems
+    'plaza-cafe': 'CafeClub®: Coffee loyalty program demands a separate profile.',
+    'plaza-arcade': 'ArcadeID: High scores and game time tracked under a unique login.',
+    'plaza-exit': 'TransitHub™: Map access handled by a third-party mobility platform.',
+
+    // Final system
+    'final-exit': 'EndOfLine Services: Finalizing your journey requires one last login.'
 };
 
 // ============================================================================
@@ -28,11 +105,20 @@ const locations = {
                 y: '45%',
                 width: '20%',
                 height: '30%'
+            },
+            {
+                id: 'phone-on-bed',
+                label: '📱 Phone',
+                x: '60%',
+                y: '50%',
+                width: '12%',
+                height: '15%'
             }
         ],
         dialogue: {
-            locked: "You need to log in before you can sleep. Data collection awaits.",
-            unlocked: "You finally sleep... exhausted from sharing so much of yourself."
+            'sleep-bed-locked': "You need to log in before you can sleep. Data collection awaits.",
+            'sleep-bed-unlocked': "You finally sleep... exhausted from sharing so much of yourself.",
+            'phone-on-bed': "Your phone glows with notifications. Every app is tracking you."
         }
     },
     room: {
@@ -46,11 +132,31 @@ const locations = {
                 y: '40%',
                 width: '15%',
                 height: '35%'
+            },
+            {
+                id: 'room-window',
+                label: '🪟 Window',
+                x: '20%',
+                y: '35%',
+                width: '15%',
+                height: '25%'
+            },
+            {
+                id: 'room-desk',
+                label: '🖥️ Computer',
+                x: '45%',
+                y: '55%',
+                width: '18%',
+                height: '20%'
             }
         ],
         dialogue: {
-            locked: "The door is locked. You need an account to open it.",
-            unlocked: "You step through the door..."
+            'room-door-locked': "The door is locked. You need an account to open it.",
+            'room-door-unlocked': "You step through the door...",
+            'room-window-locked': "The window is barred. Parental controls: Account Required.",
+            'room-window-unlocked': "You can see the world outside.",
+            'room-desk-locked': "The computer is powered off. Boot requires authentication.",
+            'room-desk-unlocked': "You log into your computer. Another account. More tracking."
         }
     },
     house: {
@@ -64,43 +170,116 @@ const locations = {
                 y: '50%',
                 width: '15%',
                 height: '30%'
+            },
+            {
+                id: 'house-kitchen',
+                label: '🍳 Kitchen',
+                x: '25%',
+                y: '60%',
+                width: '18%',
+                height: '20%'
+            },
+            {
+                id: 'house-mirror',
+                label: '🪞 Mirror',
+                x: '70%',
+                y: '45%',
+                width: '12%',
+                height: '25%'
             }
         ],
         dialogue: {
-            locked: "You can't leave without logging in. The system won't allow it.",
-            unlocked: "You step outside into the open world..."
+            'house-door-locked': "You can't leave without logging in. The system won't allow it.",
+            'house-door-unlocked': "You step outside into the open world...",
+            'house-kitchen-locked': "The fridge is sealed. Nutritional data unavailable.",
+            'house-kitchen-unlocked': "You grab some food. Each calorie is logged.",
+            'house-mirror-locked': "The mirror is clouded. Face recognition: Access Denied.",
+            'house-mirror-unlocked': "You see yourself reflected. Biometric scan complete."
         }
     },
     outside: {
-        name: "Outside",
+        name: "Outside - Neighborhood",
         background: "linear-gradient(135deg, #7cb342 0%, #558b2f 100%)",
         hotspots: [
             {
                 id: 'flowers',
                 label: '🌸 Flowers',
-                x: '30%',
-                y: '60%',
-                width: '15%',
+                x: '15%',
+                y: '65%',
+                width: '12%',
                 height: '20%'
+            },
+            {
+                id: 'park',
+                label: '🎪 Park',
+                x: '40%',
+                y: '55%',
+                width: '16%',
+                height: '25%'
             },
             {
                 id: 'mart-door',
                 label: '🏪 Poké Mart',
-                x: '60%',
+                x: '70%',
                 y: '45%',
                 width: '20%',
                 height: '30%'
+            },
+            {
+                id: 'npc-stranger',
+                label: '👤 Stranger',
+                x: '50%',
+                y: '30%',
+                width: '12%',
+                height: '18%'
             }
         ],
         dialogue: {
-            flowers: {
-                locked: "Beautiful black-boxed flowers. Error 403: Insufficient Permissions.",
-                unlocked: "Gorgeous wildflowers. They don't ask for your data."
+            'flowers-locked': "Beautiful black-boxed flowers. Error 403: Insufficient Permissions.",
+            'flowers-unlocked': "Gorgeous wildflowers. They don't ask for your data.",
+            'park-locked': "The park entrance shows: [RESTRICTED ZONE - LOGIN REQUIRED]",
+            'park-unlocked': "You enter the park. Cameras on every tree.",
+            'mart-door-locked': "The mart door is closed to unregistered players.",
+            'mart-door-unlocked': "You enter the Poké Mart...",
+            'npc-stranger-locked': "The stranger ignores you. Unverified identity.",
+            'npc-stranger-unlocked': "Stranger: 'I used to keep my data private. Now look at me.'"
+        }
+    },
+    park: {
+        name: "Pokémon Park",
+        background: "linear-gradient(135deg, #66bb6a 0%, #43a047 100%)",
+        hotspots: [
+            {
+                id: 'park-playground',
+                label: '🎠 Playground',
+                x: '30%',
+                y: '50%',
+                width: '18%',
+                height: '25%'
             },
-            mart: {
-                locked: "The mart door is closed to unregistered players.",
-                unlocked: "You enter the Poké Mart..."
+            {
+                id: 'park-bench',
+                label: '🪑 Bench',
+                x: '55%',
+                y: '60%',
+                width: '15%',
+                height: '18%'
+            },
+            {
+                id: 'park-exit',
+                label: '🚪 Exit',
+                x: '75%',
+                y: '50%',
+                width: '12%',
+                height: '20%'
             }
+        ],
+        dialogue: {
+            'park-playground-locked': "Kids play here. All monitored. All data collected.",
+            'park-playground-unlocked': "Children laugh. Unaware their playtime is monetized.",
+            'park-bench-locked': "The bench is cordoned off. Senior citizens: Subscribe to sit.",
+            'park-bench-unlocked': "You sit and watch the world. Your location is broadcast.",
+            'park-exit-unlocked': "You leave the park..."
         }
     },
     mart: {
@@ -108,17 +287,100 @@ const locations = {
         background: "linear-gradient(135deg, #ff6f00 0%, #e65100 100%)",
         hotspots: [
             {
+                id: 'mart-shelf-1',
+                label: '📦 Potions',
+                x: '20%',
+                y: '45%',
+                width: '16%',
+                height: '30%'
+            },
+            {
+                id: 'mart-shelf-2',
+                label: '📦 Balls',
+                x: '50%',
+                y: '45%',
+                width: '16%',
+                height: '30%'
+            },
+            {
                 id: 'mart-checkout',
-                label: '💳 Buy Items',
-                x: '45%',
-                y: '70%',
-                width: '20%',
-                height: '15%'
+                label: '💳 Checkout',
+                x: '75%',
+                y: '55%',
+                width: '16%',
+                height: '25%'
+            },
+            {
+                id: 'mart-exit',
+                label: '🚪 Exit',
+                x: '10%',
+                y: '30%',
+                width: '12%',
+                height: '20%'
             }
         ],
         dialogue: {
-            locked: "You need an account to make purchases.",
-            unlocked: "Welcome to the Mart. Your purchase history is being logged."
+            'mart-shelf-1-locked': "Locked. Inventory: Permission Denied.",
+            'mart-shelf-1-unlocked': "Potions & Antidotes. All tracked.",
+            'mart-shelf-2-locked': "Locked. Browsing: Subscription Required.",
+            'mart-shelf-2-unlocked': "Pokéballs of every variety. Each one logs your interests.",
+            'mart-checkout-locked': "Checkout is restricted. Please log in.",
+            'mart-checkout-unlocked': "Ready to buy? Your payment data will be stored forever.",
+            'mart-exit-unlocked': "You leave the mart..."
+        }
+    },
+    plaza: {
+        name: "Shopping Plaza",
+        background: "linear-gradient(135deg, #b0bec5 0%, #78909c 100%)",
+        hotspots: [
+            {
+                id: 'plaza-cafe',
+                label: '☕ Café',
+                x: '25%',
+                y: '50%',
+                width: '18%',
+                height: '25%'
+            },
+            {
+                id: 'plaza-arcade',
+                label: '🕹️ Arcade',
+                x: '55%',
+                y: '50%',
+                width: '18%',
+                height: '25%'
+            },
+            {
+                id: 'plaza-exit',
+                label: '🚗 Exit to Map',
+                x: '80%',
+                y: '40%',
+                width: '15%',
+                height: '30%'
+            }
+        ],
+        dialogue: {
+            'plaza-cafe-locked': "Café: Members Only. Sign up to drink coffee.",
+            'plaza-cafe-unlocked': "You order coffee. Your taste preferences are saved to a database.",
+            'plaza-arcade-locked': "Arcade: Registration required to play.",
+            'plaza-arcade-unlocked': "You play arcade games. High scores linked to your identity.",
+            'plaza-exit-unlocked': "You return to the map..."
+        }
+    },
+    final: {
+        name: "End of the Line",
+        background: "linear-gradient(135deg, #424242 0%, #212121 100%)",
+        hotspots: [
+            {
+                id: 'final-exit',
+                label: '🏁 Finish',
+                x: '40%',
+                y: '45%',
+                width: '20%',
+                height: '30%'
+            }
+        ],
+        dialogue: {
+            'final-exit-unlocked': "You've reached the end. Your data is complete. Your journey: monetized."
         }
     }
 };
@@ -218,6 +480,69 @@ function generateEmails(userEmail) {
             time: '11:45 AM',
             read: false,
             type: 'system'
+        },
+        {
+            id: 11,
+            from: 'park@recreation.com',
+            subject: 'Your Park Visits: A Summary',
+            body: 'You visited Pokémon Park 3 times this week.\n\nWe noticed:\n- You spent 8 seconds on the bench\n- You moved counterclockwise\n- You sneezed once at 3:22 PM\n\nBased on this data, we recommend: A new allergy medication! Click here to subscribe!',
+            time: '12:00 PM',
+            read: false,
+            type: 'spam'
+        },
+        {
+            id: 12,
+            from: 'suggestions@smartshop.ai',
+            subject: 'You might like: Everything',
+            body: 'Machine learning analysis of your browsing:\n\nYou looked at Pokéballs for 0.3 seconds.\n\nYou probably want:\n- 500 Pokéball ads\n- 340 similar products\n- Our premium membership\n- To reconsider all your life choices\n\nAdd to cart?',
+            time: '12:15 PM',
+            read: false,
+            type: 'ads'
+        },
+        {
+            id: 13,
+            from: 'rewards@loyaltyscam.net',
+            subject: 'LIMITED TIME: Earn 5 Reward Points!',
+            body: 'For every dollar spent, earn 1 reward point!\n\nTo redeem 50 points for a $0.50 discount, simply:\n1. Enroll in 3 additional services\n2. Verify your biometric data\n3. Give us your firstborn\n\nOffer expires in 12 hours!',
+            time: '12:30 PM',
+            read: false,
+            type: 'spam'
+        },
+        {
+            id: 14,
+            from: 'cafe@plaza.coffee',
+            subject: 'Your Latte Was Delicious',
+            body: 'We analyzed your coffee consumption:\n\nLatte at 2:45 PM - 16.3oz - temperature: 167°F\n\nBased on this data:\n- You\'re addicted\n- You\'re paying $8 for $0.80 of coffee\n- You should buy a membership\n- You\'ll buy it because behavioral prediction: 96%',
+            time: '1:00 PM',
+            read: false,
+            type: 'spam'
+        },
+        {
+            id: 15,
+            from: 'noreply@pokemail.com',
+            subject: 'Data Export Request: APPROVED',
+            body: 'Your data has been exported to:\n- 47 marketing firms\n- 12 government agencies\n- 89 data brokers\n- Your ex\n\nTo delete your data:\nPayment of $4,999 required.\n\nWould you like to pay?',
+            time: '1:15 PM',
+            read: false,
+            type: 'system'
+        },
+        {
+            id: 16,
+            from: 'alerts@pokemail.com',
+            subject: 'ACCOUNT ALERT: Demographic Profile Assigned',
+            body: 'Your demographic profile has been assigned:\n\nRace: FLAGGED\nBehavior Pattern: ANOMALOUS\nTrust Score: INSUFFICIENT\nPersonality Type: HIGH-RISK\n\nSome services have been automatically restricted based on your profile.\n\nThis decision is final and not up for appeal.',
+            time: '1:30 PM',
+            read: false,
+            type: 'system'
+        },
+        {
+            id: 17,
+            from: 'recommendations@ai-bias.net',
+            subject: 'Personalized Restrictions for You',
+            body: 'Based on your profile analysis, we recommend:\n\n✓ Alternative products you\'ll \"prefer\"\n✓ Areas where you\'ve been pre-approved\n✓ A complete list of denied services\n\nClick here to view YOUR restricted lifestyle!\n\nP.S. You didn\'t choose this. We did.',
+            time: '1:45 PM',
+            read: false,
+            type: 'ads'
         }
     ];
 }
@@ -261,6 +586,46 @@ function hideDialogue() {
 }
 
 // ============================================================================
+// RESTRICTION CHECKS
+// ============================================================================
+
+function isRaceRestricted(locationId, hotspotId) {
+    if (!gameState.race) return false;
+    const restrictions = raceRestrictions[gameState.race];
+    if (!restrictions) return false;
+    if (!restrictions[locationId]) return false;
+    return restrictions[locationId].includes(hotspotId);
+}
+
+function getRaceRestrictionMessage(race, locationId, hotspotId) {
+    const messages = {
+        godzilla: {
+            'park|park-playground': 'Account Flagged: Destructive Behavior Pattern Detected. Area Off-Limits.',
+            'outside|park': 'Your profile indicates high-risk behavior. This area is restricted.',
+            'plaza|plaza-cafe': 'Your account has been flagged for public safety concerns. Access denied.'
+        },
+        werewolf: {
+            'outside|flowers': 'Activity Pattern Violation: Nighttime Plant Interaction Flagged. Restricted.',
+            'park|park-bench': 'Behavioral Anomaly Detected: Extended Resting Periods. Account Under Review.',
+            'mart|mart-shelf-2': 'Your purchase history suggests incompatibility with this product. Blocked.'
+        },
+        vampire: {
+            'bed|sleep-bed': 'Your sleep pattern is irregular. Recommended rest disabled. See a doctor.',
+            'room|room-window': 'Sunlight exposure required for account verification. Access denied.',
+            'outside|flowers': 'Your profile shows photosensitivity risk. This area is restricted.'
+        },
+        fairy: {
+            'mart|mart-shelf-1': 'Product deemed unsuitable for your demographic. Restricted.',
+            'plaza|plaza-arcade': 'Your cognitive profile suggests limited arcade compatibility. Blocked.'
+        }
+    };
+    
+    const key = `${locationId}|${hotspotId}`;
+    const raceMessages = messages[race] || {};
+    return raceMessages[key] || 'Your account does not have access to this area. Reason: You exist.';
+}
+
+// ============================================================================
 // EMAIL SYSTEM
 // ============================================================================
 
@@ -277,7 +642,10 @@ function renderEmailList() {
     const unreadCount = emailsData.filter(e => !e.read).length;
     document.getElementById('emailCount').textContent = unreadCount;
     
-    emailsData.forEach(email => {
+    // Reverse to show newest at top
+    const sortedEmails = [...emailsData].reverse();
+    
+    sortedEmails.forEach(email => {
         const emailItem = document.createElement('div');
         emailItem.className = `email-item ${email.type === 'otp' ? 'otp' : ''} ${!email.read ? 'unread' : ''}`;
         
@@ -324,40 +692,90 @@ function startLoginFlow() {
 }
 
 function completeLogin() {
-    const email = document.getElementById('emailInput').value;
-    if (!email) {
-        alert('Please enter an email');
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('loginPasswordInput').value;
+
+    if (!email || !password) {
+        alert('Please enter email and password');
         return;
     }
-    
-    gameState.userEmail = email;
-    initializeEmails(email);
-    
-    // Generate OTP and set it in a fake email
-    gameState.generatedOTP = '837429';
-    
-    // Move to OTP form
+
+    const expectedEmail = gameState.userEmail || defaultCredentials.email;
+    const expectedPassword = gameState.userPassword || defaultCredentials.password;
+
+    if (email !== expectedEmail || password !== expectedPassword) {
+        alert(`Invalid credentials. Try ${expectedEmail} / ${expectedPassword}`);
+        return;
+    }
+
+    gameState.isLoggedIn = true;
+
+    // If a specific service was asking for login, mark it as authenticated
+    if (gameState.pendingService) {
+        gameState.serviceLogins[gameState.pendingService] = true;
+    }
+
     document.getElementById('phoneLoginState').style.display = 'none';
-    document.getElementById('phoneOTPState').style.display = 'flex';
-    document.getElementById('phoneInboxState').style.display = 'none';
-    
-    renderEmailList();
+    document.getElementById('phoneInboxState').style.display = 'flex';
+
+    closeBlockedModal();
+
+    const loginMessage = gameState.pendingService
+        ? "✓ Login successful for this service. Your data is now shared with yet another provider."
+        : "✓ Login successful. Your data is now ours. Continue your journey.";
+
+    // Clear pending service after handling message
+    gameState.pendingService = null;
+
+    showDialogue(loginMessage, renderCurrentLocation);
 }
 
-function completeOTP() {
-    const otpInput = document.getElementById('otpInput').value;
-    if (otpInput !== gameState.generatedOTP) {
+function sendSignupOTP() {
+    const email = document.getElementById('signupEmailInput').value.trim();
+    const password = document.getElementById('signupPasswordInput').value;
+
+    if (!email || !password) {
+        alert('Please enter email and password first');
+        return;
+    }
+
+    gameState.userEmail = email;
+    gameState.userPassword = password;
+    gameState.generatedOTP = '837429';
+    gameState.signupOtpSent = true;
+
+    const otpEmail = {
+        id: Date.now(),
+        from: 'otp@pokesystem.auth',
+        subject: '🔐 Your OTP Code',
+        body: `Your One-Time Password (OTP) is:\n\n${gameState.generatedOTP}\n\nDo not share this code.`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        read: false,
+        type: 'otp'
+    };
+
+    emailsData.push(otpEmail);
+    renderEmailList();
+
+    document.getElementById('signupOtpInput').style.display = 'block';
+    document.getElementById('signupSubmitBtn').style.display = 'inline-block';
+    alert('OTP sent. Check inbox and enter it to finish signup.');
+}
+
+function completeSignup() {
+    if (!gameState.signupOtpSent) {
+        alert('Click Send OTP first');
+        return;
+    }
+
+    const otp = document.getElementById('signupOtpInput').value.trim();
+    if (otp !== gameState.generatedOTP) {
         alert('Incorrect OTP. Try 837429');
         return;
     }
-    
-    gameState.isLoggedIn = true;
-    
-    document.getElementById('phoneOTPState').style.display = 'none';
-    document.getElementById('phoneInboxState').style.display = 'flex';
-    
-    hideBlockedModal();
-    showDialogue("✓ Login successful. Your data is now ours. Continue your journey.", renderCurrentLocation);
+
+    document.getElementById('signupModal').style.display = 'none';
+    showDialogue('Signup complete. You can now log in using your email and password.');
 }
 
 // ============================================================================
@@ -388,69 +806,226 @@ function renderCurrentLocation() {
     });
 }
 
+function getDialogueForInteraction(locationId, hotspotId) {
+    const dialogue = locations[locationId].dialogue;
+    const key = `${hotspotId}-${gameState.isLoggedIn ? 'unlocked' : 'locked'}`;
+    return dialogue[key] || "...";
+}
+
 function handleInteraction(hotspotId) {
     const location = locations[gameState.currentLocation];
-    let dialogueText = '';
-    let nextLocation = null;
-    let showMart = false;
     
-    if (gameState.currentLocation === 'bed' && hotspotId === 'sleep-bed') {
-        if (!gameState.isLoggedIn) {
-            showBlockedModal(location.dialogue.locked);
-        } else {
-            showDialogue(location.dialogue.unlocked, () => {
-                gameState.currentLocation = 'room';
+    // EVERYTHING REQUIRES LOGIN
+    if (!gameState.isLoggedIn) {
+        showBlockedModal('Login required to access any features. Data collection begins now.');
+        startLoginFlow();
+        return;
+    }
+    
+    // CHECK FOR RACE RESTRICTIONS AFTER LOGIN
+    if (isRaceRestricted(gameState.currentLocation, hotspotId)) {
+        const restrictionMsg = getRaceRestrictionMessage(gameState.race, gameState.currentLocation, hotspotId);
+        showBlockedModal(restrictionMsg);
+        return;
+    }
+
+    // PER-SERVICE LOGIN: every hotspot is treated as a separate system
+    const serviceId = hotspotId;
+    if (!gameState.serviceLogins[serviceId]) {
+        gameState.pendingService = serviceId;
+        const hotspotConfig = location.hotspots.find(h => h.id === hotspotId);
+        const rawLabel = hotspotConfig ? hotspotConfig.label : hotspotId;
+        // Strip leading emoji/symbols for a cleaner service name
+        const serviceName = typeof rawLabel === 'string'
+            ? rawLabel.replace(/^[^A-Za-z0-9]+\s*/, '').trim()
+            : serviceId;
+        const customMessage = serviceLoginMessages[serviceId]
+            || `"${serviceName}" runs on a different system. Please log in again to continue.`;
+        showBlockedModal(customMessage);
+        return;
+    }
+    
+    // BED INTERACTIONS
+    if (gameState.currentLocation === 'bed') {
+        if (hotspotId === 'sleep-bed') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['sleep-bed-locked']);
+            } else {
+                showDialogue(location.dialogue['sleep-bed-unlocked'], () => {
+                    gameState.currentLocation = 'room';
+                    renderCurrentLocation();
+                });
+            }
+        } else if (hotspotId === 'phone-on-bed') {
+            showDialogue(location.dialogue['phone-on-bed']);
+        }
+    }
+    
+    // ROOM INTERACTIONS
+    else if (gameState.currentLocation === 'room') {
+        if (hotspotId === 'room-door') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['room-door-locked']);
+            } else {
+                showDialogue(location.dialogue['room-door-unlocked'], () => {
+                    gameState.currentLocation = 'house';
+                    renderCurrentLocation();
+                });
+            }
+        } else if (hotspotId === 'room-window') {
+            if (!gameState.isLoggedIn) {
+                showDialogue(location.dialogue['room-window-locked']);
+            } else {
+                showDialogue(location.dialogue['room-window-unlocked']);
+            }
+        } else if (hotspotId === 'room-desk') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['room-desk-locked']);
+            } else {
+                showDialogue(location.dialogue['room-desk-unlocked']);
+            }
+        }
+    }
+    
+    // HOUSE INTERACTIONS
+    else if (gameState.currentLocation === 'house') {
+        if (hotspotId === 'house-door') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['house-door-locked']);
+            } else {
+                showDialogue(location.dialogue['house-door-unlocked'], () => {
+                    gameState.currentLocation = 'outside';
+                    renderCurrentLocation();
+                });
+            }
+        } else if (hotspotId === 'house-kitchen') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['house-kitchen-locked']);
+            } else {
+                showDialogue(location.dialogue['house-kitchen-unlocked']);
+            }
+        } else if (hotspotId === 'house-mirror') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['house-mirror-locked']);
+            } else {
+                showDialogue(location.dialogue['house-mirror-unlocked']);
+            }
+        }
+    }
+    
+    // OUTSIDE INTERACTIONS
+    else if (gameState.currentLocation === 'outside') {
+        if (hotspotId === 'flowers') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['flowers-locked']);
+            } else {
+                showDialogue(location.dialogue['flowers-unlocked']);
+            }
+        } else if (hotspotId === 'park') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['park-locked']);
+            } else {
+                showDialogue(location.dialogue['park-unlocked'], () => {
+                    gameState.currentLocation = 'park';
+                    renderCurrentLocation();
+                });
+            }
+        } else if (hotspotId === 'mart-door') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['mart-door-locked']);
+            } else {
+                showDialogue(location.dialogue['mart-door-unlocked'], () => {
+                    gameState.currentLocation = 'mart';
+                    renderCurrentLocation();
+                });
+            }
+        } else if (hotspotId === 'npc-stranger') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['npc-stranger-locked']);
+            } else {
+                showDialogue(location.dialogue['npc-stranger-unlocked']);
+            }
+        }
+    }
+    
+    // PARK INTERACTIONS
+    else if (gameState.currentLocation === 'park') {
+        if (hotspotId === 'park-playground') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['park-playground-locked']);
+            } else {
+                showDialogue(location.dialogue['park-playground-unlocked']);
+            }
+        } else if (hotspotId === 'park-bench') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['park-bench-locked']);
+            } else {
+                showDialogue(location.dialogue['park-bench-unlocked']);
+            }
+        } else if (hotspotId === 'park-exit') {
+            showDialogue(location.dialogue['park-exit-unlocked'], () => {
+                gameState.currentLocation = 'plaza';
                 renderCurrentLocation();
             });
         }
     }
     
-    else if (gameState.currentLocation === 'room' && hotspotId === 'room-door') {
-        if (!gameState.isLoggedIn) {
-            showBlockedModal(location.dialogue.locked);
-        } else {
-            showDialogue(location.dialogue.unlocked, () => {
-                gameState.currentLocation = 'house';
-                renderCurrentLocation();
-            });
-        }
-    }
-    
-    else if (gameState.currentLocation === 'house' && hotspotId === 'house-door') {
-        if (!gameState.isLoggedIn) {
-            showBlockedModal(location.dialogue.locked);
-        } else {
-            showDialogue(location.dialogue.unlocked, () => {
+    // MART INTERACTIONS
+    else if (gameState.currentLocation === 'mart') {
+        if (hotspotId === 'mart-shelf-1') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['mart-shelf-1-locked']);
+            } else {
+                showDialogue(location.dialogue['mart-shelf-1-unlocked']);
+            }
+        } else if (hotspotId === 'mart-shelf-2') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['mart-shelf-2-locked']);
+            } else {
+                showDialogue(location.dialogue['mart-shelf-2-unlocked']);
+            }
+        } else if (hotspotId === 'mart-checkout') {
+            if (!gameState.isLoggedIn) {
+                showBlockedModal(location.dialogue['mart-checkout-locked']);
+            } else {
+                showDialogue(location.dialogue['mart-checkout-unlocked'], showMartModal);
+            }
+        } else if (hotspotId === 'mart-exit') {
+            showDialogue(location.dialogue['mart-exit-unlocked'], () => {
                 gameState.currentLocation = 'outside';
                 renderCurrentLocation();
             });
         }
     }
     
-    else if (gameState.currentLocation === 'outside') {
-        if (hotspotId === 'flowers') {
+    // PLAZA INTERACTIONS
+    else if (gameState.currentLocation === 'plaza') {
+        if (hotspotId === 'plaza-cafe') {
             if (!gameState.isLoggedIn) {
-                showBlockedModal(location.dialogue.flowers.locked);
+                showBlockedModal(location.dialogue['plaza-cafe-locked']);
             } else {
-                showDialogue(location.dialogue.flowers.unlocked);
+                showDialogue(location.dialogue['plaza-cafe-unlocked']);
             }
-        } else if (hotspotId === 'mart-door') {
+        } else if (hotspotId === 'plaza-arcade') {
             if (!gameState.isLoggedIn) {
-                showBlockedModal(location.dialogue.mart.locked);
+                showBlockedModal(location.dialogue['plaza-arcade-locked']);
             } else {
-                showDialogue(location.dialogue.mart.unlocked, () => {
-                    gameState.currentLocation = 'mart';
-                    renderCurrentLocation();
-                });
+                showDialogue(location.dialogue['plaza-arcade-unlocked']);
             }
+        } else if (hotspotId === 'plaza-exit') {
+            showDialogue(location.dialogue['plaza-exit-unlocked'], () => {
+                gameState.currentLocation = 'final';
+                renderCurrentLocation();
+            });
         }
     }
     
-    else if (gameState.currentLocation === 'mart' && hotspotId === 'mart-checkout') {
-        if (!gameState.isLoggedIn) {
-            showBlockedModal(location.dialogue.locked);
-        } else {
-            showMartModal();
+    // FINAL INTERACTIONS
+    else if (gameState.currentLocation === 'final') {
+        if (hotspotId === 'final-exit') {
+            showDialogue(location.dialogue['final-exit-unlocked'], () => {
+                showDialogue("Thank you for playing. Your data has been sold to 47 companies.\n\nThis was Critical UX.");
+            });
         }
     }
 }
@@ -461,10 +1036,12 @@ function handleInteraction(hotspotId) {
 
 function showMartModal() {
     const martItems = [
-        { name: 'Potion', price: '$100' },
-        { name: 'Antidote', price: '$150' },
-        { name: 'Pokéball', price: '$200' },
-        { name: 'Great Ball', price: '$600' }
+        { name: 'Potion', price: '$100', desc: 'Heal 20 HP' },
+        { name: 'Antidote', price: '$150', desc: 'Cure Poison' },
+        { name: 'Pokéball', price: '$200', desc: 'Catch Pokémon' },
+        { name: 'Great Ball', price: '$600', desc: 'Better Catch Rate' },
+        { name: 'Ultra Ball', price: '$800', desc: 'Best Catch Rate' },
+        { name: 'Escape Rope', price: '$550', desc: 'Exit dungeon' }
     ];
     
     const martItemsContainer = document.querySelector('.mart-items');
@@ -475,6 +1052,7 @@ function showMartModal() {
         itemDiv.className = 'mart-item';
         itemDiv.innerHTML = `
             <div class="mart-item-name">${item.name}</div>
+            <div class="mart-item-desc">${item.desc}</div>
             <div class="mart-item-price">${item.price}</div>
             <button onclick="purchaseItem('${item.name}', '${item.price}')">Buy</button>
         `;
@@ -489,7 +1067,15 @@ function closeMartModal() {
 }
 
 function purchaseItem(itemName, price) {
-    showDialogue(`Purchase recorded:\n${itemName} - ${price}\n\nYour purchase history has been logged and sold to advertisers. Enjoy!`, closeMartModal);
+    const messages = [
+        `Purchased: ${itemName} - ${price}\n\nYour purchase history has been logged and sold to advertisers.`,
+        `${itemName} (${price}) - Added to your profile.\n\nWe'll show you ads for similar items forever.`,
+        `Transaction complete: ${itemName}\n\nYour buying patterns are now part of a predictive AI model.`
+    ];
+    
+    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+    closeMartModal();
+    showDialogue(randomMsg);
 }
 
 // ============================================================================
@@ -535,8 +1121,28 @@ document.querySelectorAll('.race-btn').forEach(btn => {
 // ============================================================================
 
 document.getElementById('loginSubmitBtn').addEventListener('click', completeLogin);
-document.getElementById('otpSubmitBtn').addEventListener('click', completeOTP);
 document.getElementById('backToInboxBtn').addEventListener('click', backToInbox);
+document.getElementById('sendSignupOtpBtn').addEventListener('click', sendSignupOTP);
+document.getElementById('signupSubmitBtn').addEventListener('click', completeSignup);
+
+document.getElementById('backFromLoginBtn').addEventListener('click', () => {
+    document.getElementById('phoneLoginState').style.display = 'none';
+    document.getElementById('phoneInboxState').style.display = 'flex';
+});
+
+// Phone nav buttons
+document.getElementById('phoneNavEmail').addEventListener('click', () => {
+    document.getElementById('phoneNavEmail').classList.add('active');
+    document.getElementById('phoneNavWeb').classList.remove('active');
+    document.getElementById('phoneInboxState').style.display = 'flex';
+});
+
+document.getElementById('phoneNavWeb').addEventListener('click', () => {
+    document.getElementById('phoneNavWeb').classList.add('active');
+    document.getElementById('phoneNavEmail').classList.remove('active');
+    // Web view would show here (placeholder for now)
+    alert('Web browser not yet implemented. Stay tuned for data harvesting v2.0!');
+});
 
 // ============================================================================
 // INITIALIZATION
