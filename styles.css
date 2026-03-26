@@ -91,16 +91,16 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    padding: 70px 40px 100px 40px;
+    padding: 45px 78px 66px 78px;
 }
 
 .phone-status-bar {
     background: #000;
     color: #fff;
-    padding: 8px 20px;
+    padding: 2px 10px;
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+    font-size: 10px;
     border-bottom: 1px solid #222;
 }
 
@@ -159,7 +159,7 @@ body {
 /* INBOX */
 .inbox-header {
     background: #f5f5f5;
-    padding: 15px;
+    padding: 10px;
     border-bottom: 1px solid #ddd;
     display: flex;
     justify-content: space-between;
@@ -167,7 +167,7 @@ body {
 }
 
 .inbox-header h2 {
-    font-size: 18px;
+    font-size: 12px;
     color: #000;
 }
 
@@ -187,7 +187,7 @@ body {
 }
 
 .email-item {
-    padding: 12px 15px;
+    padding: 10px 8px;
     border-bottom: 1px solid #eee;
     cursor: pointer;
     transition: background 0.2s;
@@ -211,12 +211,12 @@ body {
 .email-from {
     font-weight: bold;
     color: #000;
-    font-size: 13px;
+    font-size: 10px;
 }
 
 .email-subject {
     color: #666;
-    font-size: 12px;
+    font-size: 10px;
     margin-top: 3px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -225,7 +225,7 @@ body {
 
 .email-time {
     color: #999;
-    font-size: 11px;
+    font-size: 8px;
     margin-top: 3px;
 }
 
@@ -345,10 +345,10 @@ body {
 /* DIALOGUE BOX */
 .dialogue-box {
     position: fixed;
-    bottom: 40px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 600px;
+    width: 500px;
     max-width: 90vw;
     height: 150px;
     background-image: url('assets/dialogboxes.png');
@@ -374,8 +374,8 @@ body {
 .dialogue-continue {
     font-size: 11px;
     color: #aaa;
-    text-align: right;
-    margin-top: 10px;
+    text-align: center;
+    margin-top: 30px;
 }
 
 .dialogue-box.dialogue-red {
@@ -543,8 +543,9 @@ body {
 /* END BUTTON & END SCREEN */
 .end-button {
     position: fixed;
-    bottom: 10px;
-    left: 50%;
+    /* bottom: 10px; */
+    top: 10px;
+    left: 83%;
     transform: translateX(-50%);
     padding: 10px 24px;
     background: #ff4444;

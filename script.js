@@ -1427,6 +1427,14 @@ function autoLoginViaDialogue(serviceId) {
 
         showDialogue(loginMessage, renderCurrentLocation, 'red');
     }, 'red');
+
+    // Auto-advance from "Logging in…" to the next message after 1 second
+    setTimeout(() => {
+        const dialogueBox = document.getElementById('dialogueBox');
+        if (dialogueBox && dialogueBox.style.display !== 'none') {
+            dialogueBox.click();
+        }
+    }, 1000);
 }
 
 function showBlockedModal(message) {
