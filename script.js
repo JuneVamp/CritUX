@@ -26,7 +26,8 @@ const raceRestrictions = {
     godzilla: {
         park: ['park-playground'],
         outside: ['park'],
-        plaza: ['plaza-cafe']
+        plaza: ['plaza-cafe'],
+        house: ['house-door']
     },
     werewolf: {
         outside: ['flowers'],
@@ -324,27 +325,27 @@ const locations = {
         hotspots: [
             {
                 id: 'room-door',
-                label: '🚪 Bedroom Door',
-                x: '70%',
-                y: '40%',
-                width: '15%',
-                height: '35%'
+                label: 'Leave',
+                x: '8%',
+                y: '8%',
+                width: '17%',
+                height: '17%'
             },
             {
                 id: 'sleep-bed',
-                label: '🛏️ Bed',
-                x: '20%',
+                label: 'Bed',
+                x: '73%',
                 y: '45%',
                 width: '20%',
                 height: '30%'
             },
             {
                 id: 'room-desk',
-                label: '🖥️ Computer',
-                x: '45%',
-                y: '55%',
-                width: '18%',
-                height: '20%'
+                label: 'Computer',
+                x: '75%',
+                y: '0%',
+                width: '30%',
+                height: '35%'
             }
         ],
         dialogue: {
@@ -362,27 +363,27 @@ const locations = {
         hotspots: [
             {
                 id: 'house-door',
-                label: '🚪 Front Door',
-                x: '45%',
-                y: '50%',
-                width: '15%',
-                height: '30%'
+                label: 'Front Door',
+                x: '15%',
+                y: '17%',
+                width: '16%',
+                height: '16%'
             },
             {
                 id: 'house-kitchen',
-                label: '🧊 Fridge',
-                x: '25%',
-                y: '60%',
-                width: '18%',
+                label: 'Fridge',
+                x: '92%',
+                y: '12%',
+                width: '8%',
                 height: '20%'
             },
             {
                 id: 'house-mirror',
-                label: '📖 Book',
-                x: '70%',
-                y: '45%',
+                label: 'Book',
+                x: '55%',
+                y: '72%',
                 width: '12%',
-                height: '25%'
+                height: '12%'
             }
         ],
         dialogue: {
@@ -401,35 +402,35 @@ const locations = {
         hotspots: [
             {
                 id: 'flowers',
-                label: '🌳 Forest',
-                x: '15%',
-                y: '65%',
-                width: '12%',
-                height: '20%'
-            },
-            {
-                id: 'park',
-                label: '🏋️ Gym',
-                x: '40%',
-                y: '55%',
-                width: '16%',
-                height: '25%'
-            },
-            {
-                id: 'mart-door',
-                label: '🏪 Mart',
-                x: '70%',
-                y: '45%',
-                width: '20%',
+                label: 'Forest',
+                x: '50%',
+                y: '68%',
+                width: '40%',
                 height: '30%'
             },
             {
+                id: 'park',
+                label: 'Gym',
+                x: '11%',
+                y: '4%',
+                width: '17%',
+                height: '15%'
+            },
+            {
+                id: 'mart-door',
+                label: 'Mart',
+                x: '54%',
+                y: '42%',
+                width: '11%',
+                height: '11%'
+            },
+            {
                 id: 'npc-stranger',
-                label: '🏠 Friend\'s House',
-                x: '50%',
-                y: '30%',
-                width: '12%',
-                height: '18%'
+                label: 'Friend\'s House',
+                x: '77%',
+                y: '41%',
+                width: '13%',
+                height: '13%'
             }
         ],
         dialogue: {
@@ -810,6 +811,7 @@ function isRaceRestricted(locationId, hotspotId) {
 function getRaceRestrictionMessage(race, locationId, hotspotId) {
     const messages = {
         godzilla: {
+            'house|house-door': 'Sorry the email authentication is having some issue right now try again later',
             'park|park-playground': 'Account Flagged: Destructive Behavior Pattern Detected. Area Off-Limits.',
             'outside|park': 'Your profile indicates high-risk behavior. This area is restricted.',
             'plaza|plaza-cafe': 'Your account has been flagged for public safety concerns. Access denied.'
@@ -1314,57 +1316,12 @@ function purchaseItem(itemName, price) {
 }
 
 // ============================================================================
-// BLOCKED MODAL
+// BLOCKED / LOGIN HANDLING (DIALOGUE-ONLY)
 // ============================================================================
 
-function showBlockedModal(message) {
-    // Show the warning in the dialogue box and also surface
-    // the blocked modal so the player can choose to log in.
-    document.getElementById('blockedMessage').textContent = message;
-    document.getElementById('blockedModal').style.display = 'flex';
-    showDialogue(message, 'red');
-}
-
-function closeBlockedModal() {
-    document.getElementById('blockedModal').style.display = 'none';
-}
-
-// --------------------------------------------------------------------------
-// AUTO-LOGIN POPUP
-// --------------------------------------------------------------------------
-
-function showLoginLoadingPopup(onComplete) {
-    const modal = document.getElementById('loginLoadingModal');
-    const barFill = document.getElementById('loginLoadingBarFill');
-
-    if (!modal || !barFill) {
-        // Fallback: just wait 1 second, then continue.
-        setTimeout(onComplete, 1000);
-        return;
-    }
-
-    // Reset bar
-    barFill.style.transition = 'none';
-    barFill.style.width = '0%';
-    // Force reflow so transition reset takes effect
-    void barFill.offsetWidth;
-
-    modal.style.display = 'flex';
-
-    // Animate fill over 1 second
-    barFill.style.transition = 'width 1s linear';
-    requestAnimationFrame(() => {
-        barFill.style.width = '100%';
-    });
-
-    setTimeout(() => {
-        modal.style.display = 'none';
-        onComplete();
-    }, 1000);
-}
-
-function autoLoginWithPopup(serviceId) {
-    showLoginLoadingPopup(() => {
+function autoLoginViaDialogue(serviceId) {
+    // First show a short "Logging in" message; clicking it performs the login.
+    showDialogue('Logging in…', () => {
         // Mark the player as globally logged in
         gameState.isLoggedIn = true;
 
@@ -1375,8 +1332,6 @@ function autoLoginWithPopup(serviceId) {
             sendServiceEmails(serviceId);
         }
 
-        closeBlockedModal();
-
         const loginMessage = serviceId
             ? "✓ Login successful for this service. Your data is now shared with yet another provider."
             : "✓ Login successful. Your data is now ours. Continue your journey.";
@@ -1385,14 +1340,28 @@ function autoLoginWithPopup(serviceId) {
         gameState.pendingService = null;
 
         showDialogue(loginMessage, renderCurrentLocation, 'red');
-    });
+    }, 'red');
 }
 
+function showBlockedModal(message) {
+    // No visual modal anymore; just use the dialogue box.
+    // Clicking the dialogue will immediately proceed to the auto-login flow.
+    const serviceId = gameState.pendingService || null;
+    showDialogue(message, () => {
+        autoLoginViaDialogue(serviceId);
+    }, 'red');
+}
+
+function closeBlockedModal() {
+    const modal = document.getElementById('blockedModal');
+    if (modal) modal.style.display = 'none';
+}
+
+// Keep this listener defined, though the modal is no longer surfaced visually.
 document.getElementById('blockedLoginBtn').addEventListener('click', () => {
     const serviceId = gameState.pendingService || null;
-    // Close the restriction modal and run the quick auto-login.
     closeBlockedModal();
-    autoLoginWithPopup(serviceId);
+    autoLoginViaDialogue(serviceId);
 });
 
 // ============================================================================
