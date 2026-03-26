@@ -96,7 +96,7 @@ const serviceEmailTemplates = {
         {
             from: 'sleep@tracker.io',
             subject: 'Welcome to SleepTracker™',
-            body: 'Thanks for connecting your dreams. We will now analyze:\n- How often you toss and turn\n- Which nightmares convert best to ad clicks\n- Whether you are profitable while unconscious',
+            body: 'Thanks for signing up to SleepTracker. We use your movement and sleep patterns to give you sleep insights and recommend related products over time.',
             type: 'system'
         }
     ],
@@ -104,7 +104,7 @@ const serviceEmailTemplates = {
         {
             from: 'sync@phoneid.net',
             subject: 'PhoneID Connect: Sync Enabled',
-            body: 'Your phone is now linked across:\n- 14 advertising networks\n- 6 analytics platforms\n- 1 very curious data broker',
+            body: 'Your phone is now synced across our partner services so your apps can stay connected and notifications can be tailored to how you use your device.',
             type: 'ads'
         }
     ],
@@ -113,7 +113,7 @@ const serviceEmailTemplates = {
         {
             from: 'access@doorcorp.com',
             subject: 'DoorCorp™: Home Access Granted',
-            body: 'You may now open the door in your own house.\n\nIn exchange, we collected:\n- Your walking speed\n- Your average hesitation before leaving\n- A prediction of how often you try to escape',
+            body: 'You can now use DoorCorp to unlock your front door. Basic usage data like time and frequency of use may be logged to help improve reliability and security.',
             type: 'system'
         }
     ],
@@ -121,7 +121,7 @@ const serviceEmailTemplates = {
         {
             from: 'light@windowcloud.io',
             subject: 'WindowCloud®: Sunshine Activated',
-            body: 'We will now:\n- Measure daylight entering your room\n- Estimate your vitamin D level\n- Use it to sell you supplements',
+            body: 'WindowCloud is now active. We estimate light exposure in your room to suggest routines, wellness tips, and occasional related offers.',
             type: 'ads'
         }
     ],
@@ -129,7 +129,7 @@ const serviceEmailTemplates = {
         {
             from: 'support@deskos.app',
             subject: 'DeskOS™ Account Linked',
-            body: 'Your desktop is now a productivity platform.\n\nNew features:\n- Infinite pop-ups\n- Infinite telemetry\n- Zero privacy',
+            body: 'Your DeskOS account is linked. We collect limited usage metrics to keep your workspace synced and to surface productivity recommendations.',
             type: 'system'
         }
     ],
@@ -138,7 +138,7 @@ const serviceEmailTemplates = {
         {
             from: 'alerts@frontdoor.services',
             subject: 'FrontDoor Services: Exit Logged',
-            body: 'Every time you leave the building we will:\n- Timestamp your departure\n- Guess your destination\n- Sell the guess to three different partners',
+            body: 'We will note each time you unlock and exit through your front door so we can detect unusual activity and improve access alerts.',
             type: 'system'
         }
     ],
@@ -146,7 +146,7 @@ const serviceEmailTemplates = {
         {
             from: 'diet@kitchencloud.io',
             subject: 'KitchenCloud™: Fridge Connected',
-            body: 'Your fridge has joined the internet.\n\nWe now know:\n- How often you snack at 2AM\n- How guilty you feel\n- Which guilt-based ads work best on you',
+            body: 'Your fridge is now online. We track basic opening and inventory patterns to suggest recipes, shopping lists, and occasional promotions.',
             type: 'ads'
         }
     ],
@@ -154,7 +154,7 @@ const serviceEmailTemplates = {
         {
             from: 'scan@mirrorid.ai',
             subject: 'MirrorID®: Face Scan Complete',
-            body: 'Your reflection has been upgraded to:\n- A biometric ID\n- A marketing profile\n- A permanent record in 5 databases',
+            body: 'Your MirrorID profile is set up. Face data is used for authentication, personalization, and security checks in line with our privacy policy.',
             type: 'system'
         }
     ],
@@ -163,7 +163,7 @@ const serviceEmailTemplates = {
         {
             from: 'nature@florapass.org',
             subject: 'FloraPass: Flower Access Approved',
-            body: 'You can now smell these flowers.\n\nWe will:\n- Track how long you stare at petals\n- Infer your romantic status\n- Recommend targeted bouquet subscriptions',
+            body: 'You now have access to this managed green area. Visitor counts and dwell time may be used to plan maintenance and inform local offers.',
             type: 'ads'
         }
     ],
@@ -171,7 +171,7 @@ const serviceEmailTemplates = {
         {
             from: 'visits@parknet.city',
             subject: 'ParkNet™: Entry Confirmed',
-            body: 'Welcome to the park.\n\nSensors will now measure:\n- Steps taken per tree\n- Time spent not looking at your phone\n- Your "happiness index" for resale',
+            body: 'Welcome to the park. We may collect anonymous visit and movement data to improve facilities and understand how the space is used.',
             type: 'system'
         }
     ],
@@ -179,7 +179,7 @@ const serviceEmailTemplates = {
         {
             from: 'welcome@martaccess.biz',
             subject: 'MartAccess™: Store Entry Data',
-            body: 'Your entrance created a new record:\n- Approximate wallet thickness\n- Browsing speed\n- Abandon-cart probability',
+            body: 'Your visit to the store has been registered. We log approximate visit time and sections viewed to better plan staffing and promotions.',
             type: 'ads'
         }
     ],
@@ -187,7 +187,7 @@ const serviceEmailTemplates = {
         {
             from: 'social@sociallink.app',
             subject: 'SocialLink™: New Interaction Detected',
-            body: 'You spoke to a stranger.\n\nWe logged:\n- Volume of your voice\n- Awkward pause duration\n- Likelihood you will buy social-skills courses',
+            body: 'We noticed you started a new conversation. SocialLink may use interaction data to suggest contacts and events you might be interested in.',
             type: 'ads'
         }
     ],
@@ -196,7 +196,7 @@ const serviceEmailTemplates = {
         {
             from: 'kids@playgroundplus.fun',
             subject: 'Playground Plus: Activity Monitoring On',
-            body: 'Children at play generate valuable metrics:\n- Laughter-per-minute\n- Slide vs swing preference\n- Future brand loyalty score',
+            body: 'Playground Plus is active. Aggregate play activity may be monitored to keep equipment safe and to understand which areas are most used.',
             type: 'system'
         }
     ],
@@ -204,7 +204,7 @@ const serviceEmailTemplates = {
         {
             from: 'rest@benchreserve.com',
             subject: 'BenchReserve™: Seat Usage Logged',
-            body: 'You sat down.\n\nWe now estimate:\n- Your fatigue level\n- How much you earn per hour of rest\n- The optimal time to show life-insurance ads',
+            body: 'Your bench reservation has been noted. We may track approximate stay length to manage availability and inform park planning.',
             type: 'ads'
         }
     ],
@@ -212,7 +212,7 @@ const serviceEmailTemplates = {
         {
             from: 'exit@parknet.city',
             subject: 'ParkNet™: Exit Processed',
-            body: 'Your visit summary has been forwarded to:\n- City planners\n- Health insurers\n- Anyone buying bulk behavior data',
+            body: 'Your park visit has ended. Aggregated visit statistics may be shared with the city to help maintain and improve public spaces.',
             type: 'system'
         }
     ],
@@ -221,7 +221,7 @@ const serviceEmailTemplates = {
         {
             from: 'potions@shelfid.store',
             subject: 'ShelfID Potions: Interest Detected',
-            body: 'You looked at potions.\n\nPrediction:\n- 73% chance of impulse purchase\n- 91% chance of future targeted upsell\n- 0% chance of escaping recommendations',
+            body: 'You viewed items in the potions aisle. We may use this browsing history to fine-tune recommendations and store layout.',
             type: 'ads'
         }
     ],
@@ -229,7 +229,7 @@ const serviceEmailTemplates = {
         {
             from: 'balls@shelfid.store',
             subject: 'ShelfID Balls: Profile Updated',
-            body: 'Pokéball curiosity registered.\n\nWe linked this to:\n- Your competitiveness score\n- Your collecting tendencies\n- Your susceptibility to "limited edition" FOMO',
+            body: 'Your interest in capture items was recorded. Similar products may appear more often in your suggestions and in-store offers.',
             type: 'ads'
         }
     ],
@@ -237,7 +237,7 @@ const serviceEmailTemplates = {
         {
             from: 'receipts@paylink.io',
             subject: 'PayLink™: Checkout Analytics Enabled',
-            body: 'Every purchase will now include:\n- Price\n- Location\n- A guess at how much you regret it',
+            body: 'Your purchases will be logged with price and location so we can issue receipts, detect fraud, and improve our services.',
             type: 'receipt'
         }
     ],
@@ -245,7 +245,7 @@ const serviceEmailTemplates = {
         {
             from: 'insights@storegate.biz',
             subject: 'StoreGate™: Visit Summary',
-            body: 'You left the mart.\n\nWe recorded:\n- Time spent wandering aisles\n- Items touched but not bought\n- Your "browsing inefficiency" score',
+            body: 'Your visit has ended. We store basic details like duration and sections visited to better stock shelves and manage campaigns.',
             type: 'spam'
         }
     ],
@@ -254,7 +254,7 @@ const serviceEmailTemplates = {
         {
             from: 'loyalty@cafeclub.coffee',
             subject: 'CafeClub®: Loyalty Profile Created',
-            body: 'Your caffeine intake is now a dataset.\n\nWe will:\n- Predict your next craving\n- Adjust prices by your desperation\n- Email you when you are most likely to cave',
+            body: 'Your CaféClub account is active. We track your usual orders and visit times so we can send occasional discounts and tailored offers.',
             type: 'ads'
         }
     ],
@@ -262,7 +262,7 @@ const serviceEmailTemplates = {
         {
             from: 'games@arcadeid.fun',
             subject: 'ArcadeID: Gaming Habits Tracked',
-            body: 'Every token, every loss, every win:\n- Logged\n- Analyzed\n- Sold as a "player engagement" insight',
+            body: 'Your ArcadeID session has started. Game results and play time may be analyzed to balance difficulty and suggest new titles.',
             type: 'system'
         }
     ],
@@ -270,7 +270,7 @@ const serviceEmailTemplates = {
         {
             from: 'routes@transithub.app',
             subject: 'TransitHub™: Movement Profile Updated',
-            body: 'Leaving the plaza changed your mobility graph.\n\nWe now recommend:\n- Ads along your usual routes\n- Stores you walk past but never enter\n- Ways to monetize your commute',
+            body: 'Leaving the plaza updated your usual route. TransitHub may use anonymous movement patterns to improve route suggestions and local listings.',
             type: 'ads'
         }
     ],
@@ -279,7 +279,7 @@ const serviceEmailTemplates = {
         {
             from: 'summary@endofline.services',
             subject: 'EndOfLine Services: Lifetime Report Ready',
-            body: 'Your journey is complete.\n\nHighlights:\n- Number of systems you logged into\n- Total profiles generated\n- How much your data was worth (to everyone but you)',
+            body: 'Your journey through this service is complete. A summary of logins, devices, and preferences has been compiled for your records.',
             type: 'system'
         }
     ]
@@ -313,9 +313,9 @@ const locations = {
             }
         ],
         dialogue: {
-            'sleep-bed-locked': "You need to log in before you can sleep. Data collection awaits.",
-            'sleep-bed-unlocked': "You finally sleep... exhausted from sharing so much of yourself.",
-            'phone-on-bed': "Your phone glows with notifications. Every app is tracking you."
+            'sleep-bed-locked': "You need to log in before you can sleep.",
+            'sleep-bed-unlocked': "You finally fall asleep, drained from the day.",
+            'phone-on-bed': "Your phone lights up with a steady stream of notifications."
         }
     },
     room: {
@@ -349,11 +349,11 @@ const locations = {
             }
         ],
         dialogue: {
-            'room-door-locked': "The door is locked. You need an account to open it.",
-            'room-door-unlocked': "You step through the door...",
-            'room-desk-locked': "The computer is powered off. Boot requires authentication.",
-            'room-desk-unlocked': "You log into your computer. Another account. More tracking.",
-            'sleep-bed-unlocked': "You finally sleep... exhausted from sharing so much of yourself."
+            'room-door-locked': "The door is locked. You need to sign in to open it.",
+            'room-door-unlocked': "You step through the door into the hallway.",
+            'room-desk-locked': "The computer won’t start without your login.",
+            'room-desk-unlocked': "You log into your computer. Another account, another session.",
+            'sleep-bed-unlocked': "You lie down and drift off for a while."
         }
     },
     house: {
@@ -387,12 +387,12 @@ const locations = {
             }
         ],
         dialogue: {
-            'house-door-locked': "You can't leave without logging in. The system won't allow it.",
-            'house-door-unlocked': "You step outside into the open world...",
-            'house-kitchen-locked': "The fridge is sealed. Nutritional data unavailable.",
-            'house-kitchen-unlocked': "You grab some food. Each calorie is logged.",
-            'house-mirror-locked': "The mirror is clouded. Face recognition: Access Denied.",
-            'house-mirror-unlocked': "You see yourself reflected. Biometric scan complete."
+            'house-door-locked': "You can’t leave yet. Your account isn’t verified.",
+            'house-door-unlocked': "You open the front door and step outside.",
+            'house-kitchen-locked': "The fridge is locked behind a smart panel.",
+            'house-kitchen-unlocked': "You grab some food while the system quietly logs it.",
+            'house-mirror-locked': "The mirror stays dark. Face recognition failed.",
+            'house-mirror-unlocked': "Your reflection appears as the scanner completes its check."
         }
     },
     outside: {
@@ -434,14 +434,14 @@ const locations = {
             }
         ],
         dialogue: {
-            'flowers-locked': "Beautiful black-boxed flowers. Error 403: Insufficient Permissions.",
-            'flowers-unlocked': "Gorgeous wildflowers. They don't ask for your data.",
-            'park-locked': "The park entrance shows: [RESTRICTED ZONE - LOGIN REQUIRED]",
-            'park-unlocked': "You enter the park. Cameras on every tree.",
-            'mart-door-locked': "The mart door is closed to unregistered players.",
-            'mart-door-unlocked': "You enter the Poké Mart...",
-            'npc-stranger-locked': "The stranger ignores you. Unverified identity.",
-            'npc-stranger-unlocked': "Stranger: 'I used to keep my data private. Now look at me.'"
+            'flowers-locked': "The path to the flowers is blocked off.",
+            'flowers-unlocked': "You stop for a moment to look at the wildflowers.",
+            'park-locked': "A sign at the park gate asks you to log in first.",
+            'park-unlocked': "You step into the park. Discreet cameras sit on a few poles.",
+            'mart-door-locked': "The mart door stays shut to anyone not registered.",
+            'mart-door-unlocked': "You push open the door and walk into the mart.",
+            'npc-stranger-locked': "The person glances your way but doesn’t respond.",
+            'npc-stranger-unlocked': "Stranger: “I used to keep things offline. It’s harder now.”"
         }
     },
     park: {
@@ -475,11 +475,11 @@ const locations = {
             }
         ],
         dialogue: {
-            'park-playground-locked': "Kids play here. All monitored. All data collected.",
-            'park-playground-unlocked': "Children laugh. Unaware their playtime is monetized.",
-            'park-bench-locked': "The bench is cordoned off. Senior citizens: Subscribe to sit.",
-            'park-bench-unlocked': "You sit and watch the world. Your location is broadcast.",
-            'park-exit-unlocked': "You leave the park..."
+            'park-playground-locked': "The playground is roped off outside of registered hours.",
+            'park-playground-unlocked': "You hear kids playing in the background as you pass by.",
+            'park-bench-locked': "The bench is marked as reserved for members.",
+            'park-bench-unlocked': "You sit for a moment while the city quietly logs foot traffic.",
+            'park-exit-unlocked': "You leave the park and head back toward the street."
         }
     },
     mart: {
@@ -521,13 +521,13 @@ const locations = {
             }
         ],
         dialogue: {
-            'mart-shelf-1-locked': "Locked. Inventory: Permission Denied.",
-            'mart-shelf-1-unlocked': "Potions & Antidotes. All tracked.",
-            'mart-shelf-2-locked': "Locked. Browsing: Subscription Required.",
-            'mart-shelf-2-unlocked': "Pokéballs of every variety. Each one logs your interests.",
-            'mart-checkout-locked': "Checkout is restricted. Please log in.",
-            'mart-checkout-unlocked': "Ready to buy? Your payment data will be stored forever.",
-            'mart-exit-unlocked': "You leave the mart..."
+            'mart-shelf-1-locked': "You can’t see the stock without signing in.",
+            'mart-shelf-1-unlocked': "Potions and antidotes line the shelf, neatly tagged.",
+            'mart-shelf-2-locked': "This shelf is visible only to registered customers.",
+            'mart-shelf-2-unlocked': "Different types of Pokéballs are on display, sorted by use.",
+            'mart-checkout-locked': "Checkout is only available to logged-in accounts.",
+            'mart-checkout-unlocked': "You move to pay, knowing the purchase will stay on record.",
+            'mart-exit-unlocked': "You step back out of the mart into the street."
         }
     },
     plaza: {
@@ -561,11 +561,11 @@ const locations = {
             }
         ],
         dialogue: {
-            'plaza-cafe-locked': "Café: Members Only. Sign up to drink coffee.",
-            'plaza-cafe-unlocked': "You order coffee. Your taste preferences are saved to a database.",
-            'plaza-arcade-locked': "Arcade: Registration required to play.",
-            'plaza-arcade-unlocked': "You play arcade games. High scores linked to your identity.",
-            'plaza-exit-unlocked': "You return to the map..."
+            'plaza-cafe-locked': "The café door has a small sign: members only.",
+            'plaza-cafe-unlocked': "You grab a drink while the system adds it to your usual order history.",
+            'plaza-arcade-locked': "You need an account before you can start a game.",
+            'plaza-arcade-unlocked': "You spend a few minutes playing while scores sync to your profile.",
+            'plaza-exit-unlocked': "You leave the plaza and check the map for what’s next."
         }
     },
     final: {
@@ -583,7 +583,7 @@ const locations = {
             }
         ],
         dialogue: {
-            'final-exit-unlocked': "You've reached the end. Your data is complete. Your journey: monetized."
+            'final-exit-unlocked': "You’ve reached the end. Your journey and choices have all been recorded."
         }
     }
 };
@@ -598,7 +598,7 @@ function generateEmails(userEmail) {
             id: 1,
             from: 'noreply@pokemail.com',
             subject: 'Welcome to PokéMail!',
-            body: 'Welcome to PokéMail, where your data is our treasure!\n\nYou\'ve just agreed to:\n- Track your location 24/7\n- Monitor your sleep patterns\n- Predict your purchases\n- Sell your metadata to the highest bidder\n\nEnjoy your stay!',
+                body: 'Welcome to PokéMail. By using this service, you agree that we may process basic account, device, and usage data to operate your inbox and show you relevant offers.',
             time: '9:30 AM',
             read: false,
             type: 'system'
@@ -607,7 +607,7 @@ function generateEmails(userEmail) {
             id: 2,
             from: 'offers@pokeshop.biz',
             subject: '🔥 WOW! UNBEATABLE POKEMON CARD PRICES!!!',
-            body: 'CLICK NOW!!! LIMITED TIME!!! AMAZING DEALS!!!\n\n(We know you clicked this because we\'ve been tracking your click patterns. Your account shows a 87% likelihood of purchasing within the hour.)',
+                body: 'Limited-time offers on cards and merchandise. You received this message because you\'ve interacted with similar products in the past.',
             time: '9:45 AM',
             read: false,
             type: 'spam'
@@ -616,7 +616,7 @@ function generateEmails(userEmail) {
             id: 3,
             from: 'privacy@totallylegit.com',
             subject: 'Claim Your FREE POKEBALLS',
-            body: 'To claim your free items, please verify:\n- Full name\n- Social Security Number\n- Blood type\n- Favorite breakfast cereal\n- Your pet\'s childhood nickname\n\nDon\'t worry, we definitely won\'t misuse this!',
+                body: 'To claim your free items, please confirm your personal and payment details via the attached form. If you did not request this, ignore the email.',
             time: '10:00 AM',
             read: false,
             type: 'phishing'
@@ -625,7 +625,7 @@ function generateEmails(userEmail) {
             id: 4,
             from: 'ads@megacorp.net',
             subject: 'Limited Offer: Pokémon GO+ Premium',
-            body: 'Based on your location history (we\'ve been watching), you NEED this!\n\nUpgrade to Premium and get:\n- 5% discount (50% markup to normal price)\n- More ads\n- Even MORE data collection\n- A badge that says you\'re rich\n\nBuy now!',
+                body: 'We think you might be interested in Pokémon GO+ Premium based on your recent activity. Upgrade for bonus items, events, and extra in-game features.',
             time: '10:15 AM',
             read: false,
             type: 'ads'
@@ -634,7 +634,7 @@ function generateEmails(userEmail) {
             id: 5,
             from: 'otp@pokesystem.auth',
             subject: '🔐 Your OTP Code',
-            body: 'Your One-Time Password (OTP) is:\n\n837429\n\nDo not share this code. We\'re just storing it forever in our database anyway.',
+                body: 'Your One-Time Password (OTP) is:\n\n837429\n\nDo not share this code with anyone. Our systems use it only to confirm this login request.',
             time: '10:20 AM',
             read: false,
             type: 'otp'
@@ -643,7 +643,7 @@ function generateEmails(userEmail) {
             id: 6,
             from: 'noreply@pokemail.com',
             subject: 'We analyzed your sleep. You\'re tired.',
-            body: 'Our AI has determined that you went to sleep at 11:47 PM and woke at 6:33 AM.\n\nYou\'re tired.\n\nBuy our energy drink.\n\nWe know you will. Your behavioral prediction score is 94%.',
+                body: 'Our system detected a short night of sleep. You may feel tired today, so we\'ve highlighted content about rest, pacing your day, and optional energy boosters.',
             time: '10:40 AM',
             read: false,
             type: 'spam'
@@ -652,7 +652,7 @@ function generateEmails(userEmail) {
             id: 7,
             from: 'purchase@pokestore.com',
             subject: 'RECEIPT: Pokémon Ultra Violet',
-            body: 'Transaction #992847\nItem: Pokémon Ultra Violet\nPrice: $59.99\nPayment Method: Linked Account\n\nThank you for allowing us to track this purchase!\nWe\'ve added it to your profile for future targeted marketing.',
+                body: 'Transaction #992847\nItem: Pokémon Ultra Violet\nPrice: $59.99\nPayment Method: Linked Account\n\nThanks for your purchase. Details have been stored in your account history for support and refund purposes.',
             time: '11:00 AM',
             read: false,
             type: 'receipt'
@@ -661,7 +661,7 @@ function generateEmails(userEmail) {
             id: 8,
             from: 'alerts@privacy.fake',
             subject: 'URGENT: Suspicious Activity [NOT REALLY]',
-            body: 'We detected suspicious activity:\n\nYou opened an email.\n\nThis is definitely suspicious.\n\nTo verify it wasn\'t a hacker:\n- Click here\n- Enter your password\n- Install our "security" software\n- Give us more data\n\nWe\'re definitely not scamming you.',
+                body: 'We detected unusual activity on your account. If this wasn\'t you, please review recent sessions and update your password via the official security page.',
             time: '11:15 AM',
             read: false,
             type: 'phishing'
@@ -670,7 +670,7 @@ function generateEmails(userEmail) {
             id: 9,
             from: 'promotions@pokebase.com',
             subject: 'Achievement Unlocked: You Sold Your Sleep Data!',
-            body: 'Congratulations!\n\nYou\'ve successfully agreed to the terms and conditions without reading them!\n\nReward: Our happiness.\n\nYour reward: Probably nothing.\n\nP.S. We own your data now.',
+                body: 'Thanks for accepting the latest terms and conditions. This lets us keep your account active and continue improving our recommendations and services.',
             time: '11:30 AM',
             read: false,
             type: 'spam'
@@ -679,7 +679,7 @@ function generateEmails(userEmail) {
             id: 10,
             from: 'support@pokemail.com',
             subject: 'Your Account Security Question',
-            body: 'Security Question: "What is your mother\'s maiden name?"\n\n(Don\'t worry, we\'re just asking for our records. Definitely not for identity theft.)',
+                body: 'Security Question: "What is your mother\'s maiden name?"\n\nWe use security questions to help verify your identity when you contact support or reset your password.',
             time: '11:45 AM',
             read: false,
             type: 'system'
@@ -688,7 +688,7 @@ function generateEmails(userEmail) {
             id: 11,
             from: 'park@recreation.com',
             subject: 'Your Park Visits: A Summary',
-            body: 'You visited Pokémon Park 3 times this week.\n\nWe noticed:\n- You spent 8 seconds on the bench\n- You moved counterclockwise\n- You sneezed once at 3:22 PM\n\nBased on this data, we recommend: A new allergy medication! Click here to subscribe!',
+                body: 'You visited Pokémon Park several times this week. We use aggregated visit data to maintain paths, seating, and facilities, and may show you offers related to outdoor activities.',
             time: '12:00 PM',
             read: false,
             type: 'spam'
@@ -697,7 +697,7 @@ function generateEmails(userEmail) {
             id: 12,
             from: 'suggestions@smartshop.ai',
             subject: 'You might like: Everything',
-            body: 'Machine learning analysis of your browsing:\n\nYou looked at Pokéballs for 0.3 seconds.\n\nYou probably want:\n- 500 Pokéball ads\n- 340 similar products\n- Our premium membership\n- To reconsider all your life choices\n\nAdd to cart?',
+                body: 'Based on what you\'ve recently viewed, we think you may like related items and bundles. You can update your preferences in account settings at any time.',
             time: '12:15 PM',
             read: false,
             type: 'ads'
@@ -706,7 +706,7 @@ function generateEmails(userEmail) {
             id: 13,
             from: 'rewards@loyaltyscam.net',
             subject: 'LIMITED TIME: Earn 5 Reward Points!',
-            body: 'For every dollar spent, earn 1 reward point!\n\nTo redeem 50 points for a $0.50 discount, simply:\n1. Enroll in 3 additional services\n2. Verify your biometric data\n3. Give us your firstborn\n\nOffer expires in 12 hours!',
+                body: 'Earn points on every purchase and redeem them for small discounts on future orders. Full conditions and expiry dates are available in your rewards account.',
             time: '12:30 PM',
             read: false,
             type: 'spam'
@@ -715,7 +715,7 @@ function generateEmails(userEmail) {
             id: 14,
             from: 'cafe@plaza.coffee',
             subject: 'Your Latte Was Delicious',
-            body: 'We analyzed your coffee consumption:\n\nLatte at 2:45 PM - 16.3oz - temperature: 167°F\n\nBased on this data:\n- You\'re addicted\n- You\'re paying $8 for $0.80 of coffee\n- You should buy a membership\n- You\'ll buy it because behavioral prediction: 96%',
+                body: 'Thanks for stopping by today. We\'ve added this drink to your favorites so we can suggest similar options and occasional loyalty rewards.',
             time: '1:00 PM',
             read: false,
             type: 'spam'
@@ -724,7 +724,7 @@ function generateEmails(userEmail) {
             id: 15,
             from: 'noreply@pokemail.com',
             subject: 'Data Export Request: APPROVED',
-            body: 'Your data has been exported to:\n- 47 marketing firms\n- 12 government agencies\n- 89 data brokers\n- Your ex\n\nTo delete your data:\nPayment of $4,999 required.\n\nWould you like to pay?',
+                body: 'Your data export request has been processed. A copy of your account information and activity logs is now available for download from your settings page.',
             time: '1:15 PM',
             read: false,
             type: 'system'
@@ -733,7 +733,7 @@ function generateEmails(userEmail) {
             id: 16,
             from: 'alerts@pokemail.com',
             subject: 'ACCOUNT ALERT: Demographic Profile Assigned',
-            body: 'Your demographic profile has been assigned:\n\nRace: FLAGGED\nBehavior Pattern: ANOMALOUS\nTrust Score: INSUFFICIENT\nPersonality Type: HIGH-RISK\n\nSome services have been automatically restricted based on your profile.\n\nThis decision is final and not up for appeal.',
+                body: 'We\'ve updated your profile based on information you provided and how you use our services. Certain features may differ by region, age, and account history.',
             time: '1:30 PM',
             read: false,
             type: 'system'
@@ -742,7 +742,7 @@ function generateEmails(userEmail) {
             id: 17,
             from: 'recommendations@ai-bias.net',
             subject: 'Personalized Restrictions for You',
-            body: 'Based on your profile analysis, we recommend:\n\n✓ Alternative products you\'ll \"prefer\"\n✓ Areas where you\'ve been pre-approved\n✓ A complete list of denied services\n\nClick here to view YOUR restricted lifestyle!\n\nP.S. You didn\'t choose this. We did.',
+                body: 'We\'ve tailored your recommendations based on your profile and activity. Some products and areas may not be available to every account. View details in your dashboard.',
             time: '1:45 PM',
             read: false,
             type: 'ads'
@@ -811,30 +811,30 @@ function isRaceRestricted(locationId, hotspotId) {
 function getRaceRestrictionMessage(race, locationId, hotspotId) {
     const messages = {
         godzilla: {
-            'house|house-door': 'Sorry the email authentication is having some issue right now try again later',
-            'park|park-playground': 'Account Flagged: Destructive Behavior Pattern Detected. Area Off-Limits.',
-            'outside|park': 'Your profile indicates high-risk behavior. This area is restricted.',
-            'plaza|plaza-cafe': 'Your account has been flagged for public safety concerns. Access denied.'
+            'house|house-door': 'We’re having trouble confirming your access right now. Please try again in a moment.',
+            'park|park-playground': 'For safety reasons, your account currently can’t access this area.',
+            'outside|park': 'Based on your profile settings, this part of the map is unavailable.',
+            'plaza|plaza-cafe': 'Access to this location is limited for your current account status.'
         },
         werewolf: {
-            'outside|flowers': 'Activity Pattern Violation: Nighttime Plant Interaction Flagged. Restricted.',
-            'park|park-bench': 'Behavioral Anomaly Detected: Extended Resting Periods. Account Under Review.',
-            'mart|mart-shelf-2': 'Your purchase history suggests incompatibility with this product. Blocked.'
+            'outside|flowers': 'This area is closed to you based on how your account is set up.',
+            'park|park-bench': 'Long-stay areas are limited for your profile at the moment.',
+            'mart|mart-shelf-2': 'This product isn’t available to your account right now.'
         },
         vampire: {
-            'bed|sleep-bed': 'Your sleep pattern is irregular. Recommended rest disabled. See a doctor.',
-            'room|room-window': 'Sunlight exposure required for account verification. Access denied.',
-            'outside|flowers': 'Your profile shows photosensitivity risk. This area is restricted.'
+            'bed|sleep-bed': 'Rest options for your account are temporarily limited.',
+            'room|room-window': 'Additional verification is required before you can open this window.',
+            'outside|flowers': 'Due to your profile settings, this area is currently restricted.'
         },
         fairy: {
-            'mart|mart-shelf-1': 'Product deemed unsuitable for your demographic. Restricted.',
-            'plaza|plaza-arcade': 'Your cognitive profile suggests limited arcade compatibility. Blocked.'
+            'mart|mart-shelf-1': 'This section is unavailable for your current account type.',
+            'plaza|plaza-arcade': 'This activity isn’t offered to your profile right now.'
         }
     };
     
     const key = `${locationId}|${hotspotId}`;
     const raceMessages = messages[race] || {};
-    return raceMessages[key] || 'Your account does not have access to this area. Reason: You exist.';
+    return raceMessages[key] || 'Your account does not currently have access to this area.';
 }
 
 // ============================================================================
@@ -936,7 +936,7 @@ function sendSignupOTP() {
     const password = document.getElementById('signupPasswordInput').value;
 
     if (!email || !password) {
-        showDialogue('Please enter email and password first.', 'red');
+        showDialogue('Please enter an email and password first.', 'red');
         return;
     }
 
@@ -960,23 +960,23 @@ function sendSignupOTP() {
 
     document.getElementById('signupOtpInput').style.display = 'block';
     document.getElementById('signupSubmitBtn').style.display = 'inline-block';
-    showDialogue('OTP sent. Check inbox and enter it to finish signup.', 'green');
+    showDialogue('OTP sent. Check your inbox and enter it to finish signup.', 'green');
 }
 
 function completeSignup() {
     if (!gameState.signupOtpSent) {
-        showDialogue('Click Send OTP first.', 'red');
+        showDialogue('Please click Send OTP before entering a code.', 'red');
         return;
     }
 
     const otp = document.getElementById('signupOtpInput').value.trim();
     if (otp !== gameState.generatedOTP) {
-        showDialogue('Incorrect OTP. Try 837429.', 'red');
+        showDialogue('That code doesn’t match. Please check the email and try again.', 'red');
         return;
     }
 
     document.getElementById('signupModal').style.display = 'none';
-    showDialogue('Signup complete. You can now log in using your email and password.', 'green');
+    showDialogue('Signup complete. You can now log in with your email and password.', 'green');
 }
 
 // ============================================================================
@@ -1053,7 +1053,7 @@ function handleInteraction(hotspotId) {
     if (!gameState.isLoggedIn) {
         // Global login required; no manual login screen, just auto-login.
         gameState.pendingService = null;
-        showBlockedModal('Login required to access any features. Data collection begins now.');
+        showBlockedModal('You need to log in before you can use anything here.');
         return;
     }
     
@@ -1305,9 +1305,9 @@ function closeMartModal() {
 
 function purchaseItem(itemName, price) {
     const messages = [
-        `Purchased: ${itemName} - ${price}\n\nYour purchase history has been logged and sold to advertisers.`,
-        `${itemName} (${price}) - Added to your profile.\n\nWe'll show you ads for similar items forever.`,
-        `Transaction complete: ${itemName}\n\nYour buying patterns are now part of a predictive AI model.`
+        `Purchased: ${itemName} - ${price}\n\nThis purchase has been saved to your account history.`,
+        `${itemName} (${price}) - Added to your profile.\n\nYou may see more suggestions based on similar items.`,
+        `Transaction complete: ${itemName}\n\nYour recent purchases will help us tailor future offers.`
     ];
     
     const randomMsg = messages[Math.floor(Math.random() * messages.length)];
@@ -1333,8 +1333,8 @@ function autoLoginViaDialogue(serviceId) {
         }
 
         const loginMessage = serviceId
-            ? "✓ Login successful for this service. Your data is now shared with yet another provider."
-            : "✓ Login successful. Your data is now ours. Continue your journey.";
+            ? '✓ Login successful for this service. Some additional data may now be shared to keep it running.'
+            : '✓ Login successful. Your account is now active for this area.';
 
         // Clear pending service after handling message
         gameState.pendingService = null;
@@ -1376,7 +1376,7 @@ function selectRace(race) {
     initializeEmails(gameState.userEmail || defaultCredentials.email);
     renderEmailList();
 
-    showDialogue(`You have become a ${race}. Everything you do will now require your data.`, () => {
+    showDialogue(`You have become a ${race}. Most things you do from now on will be tied to your account.`, () => {
         renderCurrentLocation();
     }, 'red');
 }
@@ -1412,7 +1412,7 @@ document.getElementById('phoneNavWeb').addEventListener('click', () => {
     document.getElementById('phoneNavWeb').classList.add('active');
     document.getElementById('phoneNavEmail').classList.remove('active');
     // Web view would show here (placeholder for now)
-    showDialogue('Web browser not yet implemented. Stay tuned for data harvesting v2.0!', 'green');
+    showDialogue('The web browser isn’t available in this prototype yet.', 'green');
 });
 
 // ============================================================================
