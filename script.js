@@ -15,7 +15,11 @@ const gameState = {
     serviceLogins: {},
     pendingService: null,
     // Track which race-based restrictions have already triggered an email
-    restrictionEmailsSent: {}
+    restrictionEmailsSent: {},
+    // Aggregate stats
+    loginCount: 0,
+    dataRecordedCount: 0,
+    serviceFollowupScheduled: {}
 };
 
 const defaultCredentials = {
@@ -288,6 +292,42 @@ const serviceEmailTemplates = {
 };
 
 // ============================================================================
+// FOLLOW-UP AD EMAILS (BASED ON RACE)
+// ============================================================================
+
+function scheduleFollowupEmails(serviceId) {
+    if (!serviceId) return;
+    if (!gameState.race) return;
+
+    if (gameState.serviceFollowupScheduled[serviceId]) return;
+    gameState.serviceFollowupScheduled[serviceId] = true;
+
+    const raceLabel = gameState.race.charAt(0).toUpperCase() + gameState.race.slice(1);
+    const baseName = serviceId.replace(/[-_]/g, ' ');
+    const serviceName = baseName.charAt(0).toUpperCase() + baseName.slice(1);
+
+    // Send a follow-up ad email some time after the first login
+    setTimeout(() => {
+        const now = new Date();
+        const email = {
+            id: Date.now(),
+            from: 'ads@profile-targets.net',
+            subject: `${serviceName}: extra offers for your ${raceLabel} profile`,
+            body:
+                `Because you logged in to ${serviceName}, we found new offers that match how ${raceLabel} accounts usually behave.\n\n` +
+                'These suggestions are based on your activity and on similar profiles. Turning this off may reduce access to some features.',
+            time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            read: false,
+            type: 'ads'
+        };
+
+        emailsData.push(email);
+        gameState.dataRecordedCount += 1;
+        renderEmailList();
+    }, 30000); // ~30 seconds after first login to this service
+}
+
+// ============================================================================
 // LOCATIONS DATA
 // ============================================================================
 
@@ -381,7 +421,7 @@ const locations = {
             },
             {
                 id: 'house-mirror',
-                label: 'Book',
+                label: 'Mirror',
                 x: '55%',
                 y: '72%',
                 width: '12%',
@@ -439,9 +479,9 @@ const locations = {
             'flowers-locked': "The path to the flowers is blocked off.",
             'flowers-unlocked': "You stop for a moment to look at the wildflowers.",
             'park-locked': "A sign at the park gate asks you to log in first.",
-            'park-unlocked': "You step into the park. Discreet cameras sit on a few poles.",
+            'park-unlocked': "You look toward the park, but the rest of town is outside this prototype.",
             'mart-door-locked': "The mart door stays shut to anyone not registered.",
-            'mart-door-unlocked': "You push open the door and walk into the mart.",
+            'mart-door-unlocked': "The mart entrance glows with ads, but this store isn’t part of the current demo.",
             'npc-stranger-locked': "The person glances your way but doesn’t respond.",
             'npc-stranger-unlocked': "Stranger: “I used to keep things offline. It’s harder now.”"
         }
@@ -847,6 +887,8 @@ let emailsData = [];
 
 function initializeEmails(email) {
     emailsData = generateEmails(email);
+    // Treat each seeded email as a prior record of data about you
+    gameState.dataRecordedCount += emailsData.length;
 }
 
 function renderEmailList() {
@@ -903,6 +945,7 @@ function sendRestrictionEmail(race, locationId, hotspotId, restrictionMessage) {
     };
 
     emailsData.push(email);
+    gameState.dataRecordedCount += 1;
     renderEmailList();
 }
 
@@ -924,6 +967,7 @@ function sendServiceEmails(serviceId) {
             type: tpl.type || 'system'
         };
         emailsData.push(email);
+        gameState.dataRecordedCount += 1;
     });
 
     renderEmailList();
@@ -990,6 +1034,7 @@ function sendSignupOTP() {
     };
 
     emailsData.push(otpEmail);
+    gameState.dataRecordedCount += 1;
     renderEmailList();
 
     document.getElementById('signupOtpInput').style.display = 'block';
@@ -1203,19 +1248,15 @@ function handleInteraction(hotspotId) {
             if (!gameState.isLoggedIn) {
                 showBlockedModal(location.dialogue['park-locked']);
             } else {
-                showDialogue(location.dialogue['park-unlocked'], () => {
-                    gameState.currentLocation = 'park';
-                    renderCurrentLocation();
-                });
+                // Keep the player in the outside scene; park scene is disabled for now.
+                showDialogue(location.dialogue['park-unlocked']);
             }
         } else if (hotspotId === 'mart-door') {
             if (!gameState.isLoggedIn) {
                 showBlockedModal(location.dialogue['mart-door-locked']);
             } else {
-                showDialogue(location.dialogue['mart-door-unlocked'], () => {
-                    gameState.currentLocation = 'mart';
-                    renderCurrentLocation();
-                });
+                // Mart interior is disabled; just show commentary.
+                showDialogue(location.dialogue['mart-door-unlocked']);
             }
         } else if (hotspotId === 'npc-stranger') {
             if (!gameState.isLoggedIn) {
@@ -1363,6 +1404,9 @@ function purchaseItem(itemName, price) {
 function autoLoginViaDialogue(serviceId) {
     // First show a short "Logging in" message; clicking it performs the login.
     showDialogue('Logging in…', () => {
+        // Count every time the player is asked to log in
+        gameState.loginCount += 1;
+
         // Mark the player as globally logged in
         gameState.isLoggedIn = true;
 
@@ -1371,6 +1415,7 @@ function autoLoginViaDialogue(serviceId) {
         if (serviceId) {
             gameState.serviceLogins[serviceId] = true;
             sendServiceEmails(serviceId);
+            scheduleFollowupEmails(serviceId);
         }
 
         const loginMessage = serviceId
@@ -1404,6 +1449,46 @@ document.getElementById('blockedLoginBtn').addEventListener('click', () => {
     closeBlockedModal();
     autoLoginViaDialogue(serviceId);
 });
+
+// ============================================================================
+// END SCREEN & STATS
+// ============================================================================
+
+function showEndScreen() {
+    const container = document.querySelector('.container');
+    const dialogueBox = document.getElementById('dialogueBox');
+    const endScreen = document.getElementById('endScreen');
+    const endStatsText = document.getElementById('endStatsText');
+    const endButton = document.getElementById('endButton');
+
+    if (container) container.style.display = 'none';
+    if (dialogueBox) dialogueBox.style.display = 'none';
+    if (endButton) endButton.style.display = 'none';
+
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.style.display = 'none';
+    });
+
+    const raceLabel = gameState.race
+        ? gameState.race.charAt(0).toUpperCase() + gameState.race.slice(1)
+        : 'no specific profile';
+    const restrictedCount = Object.keys(gameState.restrictionEmailsSent || {}).length;
+    const loginCount = gameState.loginCount || 0;
+    const dataCount = gameState.dataRecordedCount || 0;
+
+    const text =
+        `Since you played ${raceLabel} you were restricted from ${restrictedCount} things.\n\n` +
+        `You logged in ${loginCount} times, and your data was recorded ${dataCount} times.\n\n` +
+        'Most of your data is either sold for further advertising or keeping track of your activity for "public safety" (whatever the corporations and government are currently trying to take away from you).';
+
+    if (endStatsText) {
+        endStatsText.textContent = text;
+    }
+
+    if (endScreen) {
+        endScreen.style.display = 'flex';
+    }
+}
 
 // ============================================================================
 // RACE SELECTION
@@ -1455,6 +1540,9 @@ document.getElementById('phoneNavWeb').addEventListener('click', () => {
     // Web view would show here (placeholder for now)
     showDialogue('The web browser isn’t available in this prototype yet.', 'green');
 });
+
+// Global End button
+document.getElementById('endButton').addEventListener('click', showEndScreen);
 
 // ============================================================================
 // INITIALIZATION
