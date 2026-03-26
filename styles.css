@@ -74,6 +74,9 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    /* Fill the vertical space of the main container so
+       the phone screen has a fixed viewport height */
+    height: 100%;
 }
 
 .phone-frame {
