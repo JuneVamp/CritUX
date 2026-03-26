@@ -920,49 +920,13 @@ function backToInbox() {
 // ============================================================================
 
 function startLoginFlow() {
-    document.getElementById('phoneInboxState').style.display = 'none';
-    document.getElementById('phoneLoginState').style.display = 'flex';
+    // Legacy manual login screen is no longer used.
+    // Login now happens automatically via a short loading popup.
 }
 
 function completeLogin() {
-    const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('loginPasswordInput').value;
-
-    if (!email || !password) {
-        showDialogue('Please enter email and password.', 'red');
-        return;
-    }
-
-    const expectedEmail = gameState.userEmail || defaultCredentials.email;
-    const expectedPassword = gameState.userPassword || defaultCredentials.password;
-
-    if (email !== expectedEmail || password !== expectedPassword) {
-        showDialogue(`Invalid credentials. Try ${expectedEmail} / ${expectedPassword}`, 'red');
-        return;
-    }
-
-    gameState.isLoggedIn = true;
-
-    // If a specific service was asking for login, mark it as authenticated
-    if (gameState.pendingService) {
-        gameState.serviceLogins[gameState.pendingService] = true;
-        // Trigger emails for this service login event
-        sendServiceEmails(gameState.pendingService);
-    }
-
-    document.getElementById('phoneLoginState').style.display = 'none';
-    document.getElementById('phoneInboxState').style.display = 'flex';
-
-    closeBlockedModal();
-
-    const loginMessage = gameState.pendingService
-        ? "✓ Login successful for this service. Your data is now shared with yet another provider."
-        : "✓ Login successful. Your data is now ours. Continue your journey.";
-
-    // Clear pending service after handling message
-    gameState.pendingService = null;
-
-    showDialogue(loginMessage, renderCurrentLocation, 'red');
+    // Legacy manual login handler retained for safety but unused.
+    // Auto-login is now handled by autoLoginWithPopup().
 }
 
 function sendSignupOTP() {
@@ -1085,8 +1049,9 @@ function handleInteraction(hotspotId) {
     
     // EVERYTHING REQUIRES LOGIN
     if (!gameState.isLoggedIn) {
+        // Global login required; no manual login screen, just auto-login.
+        gameState.pendingService = null;
         showBlockedModal('Login required to access any features. Data collection begins now.');
-        startLoginFlow();
         return;
     }
     
@@ -1364,9 +1329,70 @@ function closeBlockedModal() {
     document.getElementById('blockedModal').style.display = 'none';
 }
 
+// --------------------------------------------------------------------------
+// AUTO-LOGIN POPUP
+// --------------------------------------------------------------------------
+
+function showLoginLoadingPopup(onComplete) {
+    const modal = document.getElementById('loginLoadingModal');
+    const barFill = document.getElementById('loginLoadingBarFill');
+
+    if (!modal || !barFill) {
+        // Fallback: just wait 1 second, then continue.
+        setTimeout(onComplete, 1000);
+        return;
+    }
+
+    // Reset bar
+    barFill.style.transition = 'none';
+    barFill.style.width = '0%';
+    // Force reflow so transition reset takes effect
+    void barFill.offsetWidth;
+
+    modal.style.display = 'flex';
+
+    // Animate fill over 1 second
+    barFill.style.transition = 'width 1s linear';
+    requestAnimationFrame(() => {
+        barFill.style.width = '100%';
+    });
+
+    setTimeout(() => {
+        modal.style.display = 'none';
+        onComplete();
+    }, 1000);
+}
+
+function autoLoginWithPopup(serviceId) {
+    showLoginLoadingPopup(() => {
+        // Mark the player as globally logged in
+        gameState.isLoggedIn = true;
+
+        // If this was for a specific service, record that login and
+        // send the corresponding satirical email(s).
+        if (serviceId) {
+            gameState.serviceLogins[serviceId] = true;
+            sendServiceEmails(serviceId);
+        }
+
+        closeBlockedModal();
+
+        const loginMessage = serviceId
+            ? "✓ Login successful for this service. Your data is now shared with yet another provider."
+            : "✓ Login successful. Your data is now ours. Continue your journey.";
+
+        // Clear pending service after handling message
+        gameState.pendingService = null;
+
+        showDialogue(loginMessage, renderCurrentLocation, 'red');
+    });
+}
+
 document.getElementById('blockedLoginBtn').addEventListener('click', () => {
+    const serviceId = gameState.pendingService || null;
+    // Close the restriction modal and run the quick auto-login.
     closeBlockedModal();
-    startLoginFlow();
+    autoLoginWithPopup(serviceId);
 });
 
 // ============================================================================
