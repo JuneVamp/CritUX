@@ -13,7 +13,9 @@ const gameState = {
     signupOtpSent: false,
     // Per-system logins: each hotspot acts like a separate "service"
     serviceLogins: {},
-    pendingService: null
+    pendingService: null,
+    // Track which race-based restrictions have already triggered an email
+    restrictionEmailsSent: {}
 };
 
 const defaultCredentials = {
@@ -872,6 +874,38 @@ function renderEmailList() {
     });
 }
 
+// Send an email the first time a race-based restriction is encountered
+function sendRestrictionEmail(race, locationId, hotspotId, restrictionMessage) {
+    const location = locations[locationId];
+    const hotspotConfig = location && location.hotspots
+        ? location.hotspots.find(h => h.id === hotspotId)
+        : null;
+
+    const rawLabel = hotspotConfig ? hotspotConfig.label : hotspotId;
+    const cleanLabel = typeof rawLabel === 'string'
+        ? rawLabel.replace(/^[^A-Za-z0-9]+\s*/, '').trim()
+        : hotspotId;
+
+    const now = new Date();
+
+    const email = {
+        id: Date.now(),
+        from: 'restrictions@ai-bias.net',
+        subject: `Access restricted: ${cleanLabel || hotspotId}`,
+        body:
+            `Our systems limited access to "${cleanLabel || hotspotId}" based on your profile (${race}).\n\n` +
+            `${restrictionMessage}\n\n` +
+            'Some accounts may see different locations, options, or prices. ' +
+            'These automated decisions are based on how your profile is categorized.',
+        time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        read: false,
+        type: 'system'
+    };
+
+    emailsData.push(email);
+    renderEmailList();
+}
+
 // Send emails associated with a specific system login event
 function sendServiceEmails(serviceId) {
     const templates = serviceEmailTemplates[serviceId];
@@ -1060,6 +1094,13 @@ function handleInteraction(hotspotId) {
     // CHECK FOR RACE RESTRICTIONS AFTER LOGIN
     if (isRaceRestricted(gameState.currentLocation, hotspotId)) {
         const restrictionMsg = getRaceRestrictionMessage(gameState.race, gameState.currentLocation, hotspotId);
+        const key = `${gameState.race}|${gameState.currentLocation}|${hotspotId}`;
+
+        if (!gameState.restrictionEmailsSent[key]) {
+            gameState.restrictionEmailsSent[key] = true;
+            sendRestrictionEmail(gameState.race, gameState.currentLocation, hotspotId, restrictionMsg);
+        }
+
         showBlockedModal(restrictionMsg);
         return;
     }
