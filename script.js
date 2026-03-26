@@ -814,11 +814,16 @@ function showDialogue(text, callback, tone) {
 
     const dialogueBox = document.getElementById('dialogueBox');
     const dialogueText = document.getElementById('dialogueText');
-    const appliedTone = tone === 'red' ? 'red' : 'green';
+
+    const isRestriction = tone === 'restriction';
+    const appliedTone = tone === 'red' || isRestriction ? 'red' : 'green';
     
     dialogueBox.style.display = 'block';
-    dialogueBox.classList.remove('dialogue-red', 'dialogue-green');
+    dialogueBox.classList.remove('dialogue-red', 'dialogue-green', 'dialogue-restriction');
     dialogueBox.classList.add(appliedTone === 'red' ? 'dialogue-red' : 'dialogue-green');
+    if (isRestriction) {
+        dialogueBox.classList.add('dialogue-restriction');
+    }
 
     // Simple render: write full text at once to avoid any
     // timing issues with the typewriter effect.
@@ -903,7 +908,9 @@ function renderEmailList() {
     
     sortedEmails.forEach(email => {
         const emailItem = document.createElement('div');
-        emailItem.className = `email-item ${email.type === 'otp' ? 'otp' : ''} ${!email.read ? 'unread' : ''}`;
+        const typeClass = email.type === 'otp' ? 'otp' : (email.type === 'restriction' ? 'restriction' : '');
+        const unreadClass = !email.read ? 'unread' : '';
+        emailItem.className = `email-item ${typeClass} ${unreadClass}`.trim();
         
         emailItem.innerHTML = `
             <div class="email-from">${email.from}</div>
@@ -941,7 +948,7 @@ function sendRestrictionEmail(race, locationId, hotspotId, restrictionMessage) {
             'These automated decisions are based on how your profile is categorized.',
         time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         read: false,
-        type: 'system'
+        type: 'restriction'
     };
 
     emailsData.push(email);
@@ -1146,7 +1153,7 @@ function handleInteraction(hotspotId) {
             sendRestrictionEmail(gameState.race, gameState.currentLocation, hotspotId, restrictionMsg);
         }
 
-        showBlockedModal(restrictionMsg);
+        showBlockedModal(restrictionMsg, true);
         return;
     }
 
@@ -1437,13 +1444,14 @@ function autoLoginViaDialogue(serviceId) {
     }, 1000);
 }
 
-function showBlockedModal(message) {
+function showBlockedModal(message, isRestriction) {
     // No visual modal anymore; just use the dialogue box.
     // Clicking the dialogue will immediately proceed to the auto-login flow.
     const serviceId = gameState.pendingService || null;
+    const tone = isRestriction ? 'restriction' : 'red';
     showDialogue(message, () => {
         autoLoginViaDialogue(serviceId);
-    }, 'red');
+    }, tone);
 }
 
 function closeBlockedModal() {

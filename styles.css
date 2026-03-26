@@ -204,6 +204,17 @@ body {
     font-weight: bold;
 }
 
+/* Restriction emails: red text and red side line */
+.email-item.restriction {
+    border-left-color: #ff4b4b;
+}
+
+.email-item.restriction .email-from,
+.email-item.restriction .email-subject,
+.email-item.restriction .email-time {
+    color: #cc0000;
+}
+
 .email-item.otp {
     border-left-color: #ff6b6b;
 }
@@ -369,6 +380,12 @@ body {
     line-height: 1.6;
     margin-bottom: 10px;
     min-height: 40px;
+}
+
+/* Emphasis style for race restriction dialogue */
+.dialogue-box.dialogue-restriction #dialogueText {
+    font-weight: bold;
+    font-size: 18px;
 }
 
 .dialogue-continue {
