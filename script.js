@@ -5,7 +5,7 @@
 const gameState = {
     race: null,
     isLoggedIn: false,
-    currentLocation: 'bed',
+    currentLocation: 'room',
     currentDialogueIndex: 0,
     generatedOTP: null,
     userEmail: null,
@@ -331,12 +331,12 @@ const locations = {
                 height: '35%'
             },
             {
-                id: 'room-window',
-                label: '🪟 Window',
+                id: 'sleep-bed',
+                label: '🛏️ Bed',
                 x: '20%',
-                y: '35%',
-                width: '15%',
-                height: '25%'
+                y: '45%',
+                width: '20%',
+                height: '30%'
             },
             {
                 id: 'room-desk',
@@ -350,10 +350,9 @@ const locations = {
         dialogue: {
             'room-door-locked': "The door is locked. You need an account to open it.",
             'room-door-unlocked': "You step through the door...",
-            'room-window-locked': "The window is barred. Parental controls: Account Required.",
-            'room-window-unlocked': "You can see the world outside.",
             'room-desk-locked': "The computer is powered off. Boot requires authentication.",
-            'room-desk-unlocked': "You log into your computer. Another account. More tracking."
+            'room-desk-unlocked': "You log into your computer. Another account. More tracking.",
+            'sleep-bed-unlocked': "You finally sleep... exhausted from sharing so much of yourself."
         }
     },
     house: {
@@ -1031,6 +1030,11 @@ function renderCurrentLocation() {
         gameCanvas.style.backgroundImage = 'none';
     }
     
+    // Adjust canvas height to match the intrinsic aspect ratio of
+    // the current background image so the whole image stays visible
+    // across different screen aspect ratios.
+    adjustGameCanvasSize();
+
     // Render hotspots
     const hotspotsContainer = document.getElementById('hotspotsContainer');
     hotspotsContainer.innerHTML = '';
@@ -1046,6 +1050,28 @@ function renderCurrentLocation() {
         hotspotDiv.addEventListener('click', () => handleInteraction(hotspot.id));
         hotspotsContainer.appendChild(hotspotDiv);
     });
+}
+
+// Keep the visual game canvas (and therefore the hotspot overlay)
+// sized to the actual aspect ratio of the current background image,
+// so we avoid cutting off parts of the image on wide/tall screens.
+function adjustGameCanvasSize() {
+    const location = locations[gameState.currentLocation];
+    const gameCanvas = document.getElementById('gameCanvas');
+
+    if (!location || !location.backgroundImage || !gameCanvas) return;
+
+    const img = new Image();
+    img.src = location.backgroundImage;
+    img.onload = () => {
+        const aspect = img.width / img.height;
+        const width = gameCanvas.clientWidth;
+
+        if (!width || !aspect) return;
+
+        const height = width / aspect;
+        gameCanvas.style.height = `${height}px`;
+    };
 }
 
 function getDialogueForInteraction(locationId, hotspotId) {
@@ -1114,17 +1140,19 @@ function handleInteraction(hotspotId) {
                     renderCurrentLocation();
                 });
             }
-        } else if (hotspotId === 'room-window') {
-            if (!gameState.isLoggedIn) {
-                showDialogue(location.dialogue['room-window-locked']);
-            } else {
-                showDialogue(location.dialogue['room-window-unlocked']);
-            }
         } else if (hotspotId === 'room-desk') {
             if (!gameState.isLoggedIn) {
                 showBlockedModal(location.dialogue['room-desk-locked']);
             } else {
                 showDialogue(location.dialogue['room-desk-unlocked']);
+            }
+        } else if (hotspotId === 'sleep-bed') {
+            // In the new flow, the bed is part of the room;
+            // interacting with it just shows the sleep narration.
+            if (!gameState.isLoggedIn) {
+                showBlockedModal('Login required before you can even rest.');
+            } else {
+                showDialogue(location.dialogue['sleep-bed-unlocked']);
             }
         }
     }
@@ -1399,6 +1427,9 @@ document.getElementById('phoneNavWeb').addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('raceSelectModal').style.display = 'flex';
     document.getElementById('phoneInboxState').style.display = 'flex';
+    // Ensure canvas/hotspots resize correctly if the window size
+    // changes before the player has selected a race.
+    window.addEventListener('resize', adjustGameCanvasSize);
 });
 
 // Fallback: ensure inbox is shown on load
