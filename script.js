@@ -38,16 +38,17 @@ const raceRestrictions = {
     werewolf: {
         outside: ['flowers'],
         park: ['park-bench'],
-        mart: ['mart-shelf-2']
+        mart: ['mart-shelf-2'],
+        house: ['house-mirror'],
+        plaza: ['plaza-exit']
     },
     vampire: {
         bed: ['sleep-bed'],
-        room: ['room-window'],
-        outside: ['flowers']
+        house: ['house-kitchen']
     },
     fairy: {
-        mart: ['mart-shelf-1'],
-        plaza: ['plaza-arcade']
+        room: ['room-desk'],
+        outside: ['park']
     },
     princess: {
         // Princess gets most access (ironic commentary on privilege)
@@ -68,7 +69,7 @@ const serviceLoginMessages = {
     // House systems
     'house-door': 'FrontDoor Services LLC: Separate credentials required to leave the building.',
     'house-kitchen': 'KitchenCloud™: Log in to access food and nutritional analytics.',
-    'house-mirror': 'MirrorID®: Biometric reflection service needs its own account.',
+    'house-mirror': 'BookID™: Personalized reading tracker needs its own account.',
 
     // Outside systems
     'flowers': 'FloraPass: Sign up to smell these flowers and share your pollen data.',
@@ -158,9 +159,9 @@ const serviceEmailTemplates = {
     ],
     'house-mirror': [
         {
-            from: 'scan@mirrorid.ai',
-            subject: 'MirrorID®: Face Scan Complete',
-            body: 'Your MirrorID profile is set up. Face data is used for authentication, personalization, and security checks in line with our privacy policy.',
+            from: 'read@bookid.ai',
+            subject: 'BookID™: Library Scan Complete',
+            body: 'Your BookID profile is set up. Reading data is used for recommendations, personalization, and engagement tracking in line with our privacy policy.',
             type: 'system'
         }
     ],
@@ -421,7 +422,7 @@ const locations = {
             },
             {
                 id: 'house-mirror',
-                label: 'Mirror',
+                label: 'Book',
                 x: '55%',
                 y: '72%',
                 width: '12%',
@@ -433,8 +434,8 @@ const locations = {
             'house-door-unlocked': "You open the front door and step outside.",
             'house-kitchen-locked': "The fridge is locked behind a smart panel.",
             'house-kitchen-unlocked': "You grab some food while the system quietly logs it.",
-            'house-mirror-locked': "The mirror stays dark. Face recognition failed.",
-            'house-mirror-unlocked': "Your reflection appears as the scanner completes its check."
+            'house-mirror-locked': "The book is locked by a content filter. Access denied.",
+            'house-mirror-unlocked': "The book opens as the system confirms you’re allowed to read it."
         }
     },
     outside: {
@@ -864,18 +865,19 @@ function getRaceRestrictionMessage(race, locationId, hotspotId) {
             'plaza|plaza-cafe': 'Access to this location is limited for your current account status.'
         },
         werewolf: {
-            'outside|flowers': 'This area is closed to you based on how your account is set up.',
-            'park|park-bench': 'Long-stay areas are limited for your profile at the moment.',
-            'mart|mart-shelf-2': 'This product isn’t available to your account right now.'
+            'outside|flowers': 'Access to this forest area is limited for your profile.',
+            'park|park-bench': 'This rest spot is unavailable to your account at the moment.',
+            'mart|mart-shelf-2': 'This product isn’t available to your account right now.',
+            'house|house-mirror': 'Your profile currently cannot open this book from this location.',
+            'plaza|plaza-exit': 'Travel to this friend’s house is restricted for your account.'
         },
         vampire: {
             'bed|sleep-bed': 'Rest options for your account are temporarily limited.',
-            'room|room-window': 'Additional verification is required before you can open this window.',
-            'outside|flowers': 'Due to your profile settings, this area is currently restricted.'
+            'house|house-kitchen': 'Fridge access for this profile is currently limited.'
         },
         fairy: {
-            'mart|mart-shelf-1': 'This section is unavailable for your current account type.',
-            'plaza|plaza-arcade': 'This activity isn’t offered to your profile right now.'
+            'room|room-desk': 'Computer access is not offered to your current account type.',
+            'outside|park': 'This gym area is currently unavailable for your profile.'
         }
     };
     
@@ -1543,19 +1545,24 @@ document.getElementById('backFromLoginBtn').addEventListener('click', () => {
     document.getElementById('phoneInboxState').style.display = 'flex';
 });
 
-// Phone nav buttons
-document.getElementById('phoneNavEmail').addEventListener('click', () => {
-    document.getElementById('phoneNavEmail').classList.add('active');
-    document.getElementById('phoneNavWeb').classList.remove('active');
-    document.getElementById('phoneInboxState').style.display = 'flex';
-});
+// Phone nav buttons (only if present in DOM)
+const phoneNavEmailBtn = document.getElementById('phoneNavEmail');
+const phoneNavWebBtn = document.getElementById('phoneNavWeb');
 
-document.getElementById('phoneNavWeb').addEventListener('click', () => {
-    document.getElementById('phoneNavWeb').classList.add('active');
-    document.getElementById('phoneNavEmail').classList.remove('active');
-    // Web view would show here (placeholder for now)
-    showDialogue('The web browser isn’t available in this prototype yet.', 'green');
-});
+if (phoneNavEmailBtn && phoneNavWebBtn) {
+    phoneNavEmailBtn.addEventListener('click', () => {
+        phoneNavEmailBtn.classList.add('active');
+        phoneNavWebBtn.classList.remove('active');
+        document.getElementById('phoneInboxState').style.display = 'flex';
+    });
+
+    phoneNavWebBtn.addEventListener('click', () => {
+        phoneNavWebBtn.classList.add('active');
+        phoneNavEmailBtn.classList.remove('active');
+        // Web view would show here (placeholder for now)
+        showDialogue('The web browser isn’t available in this prototype yet.', 'green');
+    });
+}
 
 // Global End button
 document.getElementById('endButton').addEventListener('click', showEndScreen);
