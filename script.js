@@ -89,6 +89,201 @@ const serviceLoginMessages = {
     'final-exit': 'EndOfLine Services: Finalizing your journey requires one last login.'
 };
 
+// Satirical emails that get sent when logging into each separate system
+const serviceEmailTemplates = {
+    'sleep-bed': [
+        {
+            from: 'sleep@tracker.io',
+            subject: 'Welcome to SleepTracker™',
+            body: 'Thanks for connecting your dreams. We will now analyze:\n- How often you toss and turn\n- Which nightmares convert best to ad clicks\n- Whether you are profitable while unconscious',
+            type: 'system'
+        }
+    ],
+    'phone-on-bed': [
+        {
+            from: 'sync@phoneid.net',
+            subject: 'PhoneID Connect: Sync Enabled',
+            body: 'Your phone is now linked across:\n- 14 advertising networks\n- 6 analytics platforms\n- 1 very curious data broker',
+            type: 'ads'
+        }
+    ],
+
+    'room-door': [
+        {
+            from: 'access@doorcorp.com',
+            subject: 'DoorCorp™: Home Access Granted',
+            body: 'You may now open the door in your own house.\n\nIn exchange, we collected:\n- Your walking speed\n- Your average hesitation before leaving\n- A prediction of how often you try to escape',
+            type: 'system'
+        }
+    ],
+    'room-window': [
+        {
+            from: 'light@windowcloud.io',
+            subject: 'WindowCloud®: Sunshine Activated',
+            body: 'We will now:\n- Measure daylight entering your room\n- Estimate your vitamin D level\n- Use it to sell you supplements',
+            type: 'ads'
+        }
+    ],
+    'room-desk': [
+        {
+            from: 'support@deskos.app',
+            subject: 'DeskOS™ Account Linked',
+            body: 'Your desktop is now a productivity platform.\n\nNew features:\n- Infinite pop-ups\n- Infinite telemetry\n- Zero privacy',
+            type: 'system'
+        }
+    ],
+
+    'house-door': [
+        {
+            from: 'alerts@frontdoor.services',
+            subject: 'FrontDoor Services: Exit Logged',
+            body: 'Every time you leave the building we will:\n- Timestamp your departure\n- Guess your destination\n- Sell the guess to three different partners',
+            type: 'system'
+        }
+    ],
+    'house-kitchen': [
+        {
+            from: 'diet@kitchencloud.io',
+            subject: 'KitchenCloud™: Fridge Connected',
+            body: 'Your fridge has joined the internet.\n\nWe now know:\n- How often you snack at 2AM\n- How guilty you feel\n- Which guilt-based ads work best on you',
+            type: 'ads'
+        }
+    ],
+    'house-mirror': [
+        {
+            from: 'scan@mirrorid.ai',
+            subject: 'MirrorID®: Face Scan Complete',
+            body: 'Your reflection has been upgraded to:\n- A biometric ID\n- A marketing profile\n- A permanent record in 5 databases',
+            type: 'system'
+        }
+    ],
+
+    'flowers': [
+        {
+            from: 'nature@florapass.org',
+            subject: 'FloraPass: Flower Access Approved',
+            body: 'You can now smell these flowers.\n\nWe will:\n- Track how long you stare at petals\n- Infer your romantic status\n- Recommend targeted bouquet subscriptions',
+            type: 'ads'
+        }
+    ],
+    'park': [
+        {
+            from: 'visits@parknet.city',
+            subject: 'ParkNet™: Entry Confirmed',
+            body: 'Welcome to the park.\n\nSensors will now measure:\n- Steps taken per tree\n- Time spent not looking at your phone\n- Your "happiness index" for resale',
+            type: 'system'
+        }
+    ],
+    'mart-door': [
+        {
+            from: 'welcome@martaccess.biz',
+            subject: 'MartAccess™: Store Entry Data',
+            body: 'Your entrance created a new record:\n- Approximate wallet thickness\n- Browsing speed\n- Abandon-cart probability',
+            type: 'ads'
+        }
+    ],
+    'npc-stranger': [
+        {
+            from: 'social@sociallink.app',
+            subject: 'SocialLink™: New Interaction Detected',
+            body: 'You spoke to a stranger.\n\nWe logged:\n- Volume of your voice\n- Awkward pause duration\n- Likelihood you will buy social-skills courses',
+            type: 'ads'
+        }
+    ],
+
+    'park-playground': [
+        {
+            from: 'kids@playgroundplus.fun',
+            subject: 'Playground Plus: Activity Monitoring On',
+            body: 'Children at play generate valuable metrics:\n- Laughter-per-minute\n- Slide vs swing preference\n- Future brand loyalty score',
+            type: 'system'
+        }
+    ],
+    'park-bench': [
+        {
+            from: 'rest@benchreserve.com',
+            subject: 'BenchReserve™: Seat Usage Logged',
+            body: 'You sat down.\n\nWe now estimate:\n- Your fatigue level\n- How much you earn per hour of rest\n- The optimal time to show life-insurance ads',
+            type: 'ads'
+        }
+    ],
+    'park-exit': [
+        {
+            from: 'exit@parknet.city',
+            subject: 'ParkNet™: Exit Processed',
+            body: 'Your visit summary has been forwarded to:\n- City planners\n- Health insurers\n- Anyone buying bulk behavior data',
+            type: 'system'
+        }
+    ],
+
+    'mart-shelf-1': [
+        {
+            from: 'potions@shelfid.store',
+            subject: 'ShelfID Potions: Interest Detected',
+            body: 'You looked at potions.\n\nPrediction:\n- 73% chance of impulse purchase\n- 91% chance of future targeted upsell\n- 0% chance of escaping recommendations',
+            type: 'ads'
+        }
+    ],
+    'mart-shelf-2': [
+        {
+            from: 'balls@shelfid.store',
+            subject: 'ShelfID Balls: Profile Updated',
+            body: 'Pokéball curiosity registered.\n\nWe linked this to:\n- Your competitiveness score\n- Your collecting tendencies\n- Your susceptibility to "limited edition" FOMO',
+            type: 'ads'
+        }
+    ],
+    'mart-checkout': [
+        {
+            from: 'receipts@paylink.io',
+            subject: 'PayLink™: Checkout Analytics Enabled',
+            body: 'Every purchase will now include:\n- Price\n- Location\n- A guess at how much you regret it',
+            type: 'receipt'
+        }
+    ],
+    'mart-exit': [
+        {
+            from: 'insights@storegate.biz',
+            subject: 'StoreGate™: Visit Summary',
+            body: 'You left the mart.\n\nWe recorded:\n- Time spent wandering aisles\n- Items touched but not bought\n- Your "browsing inefficiency" score',
+            type: 'spam'
+        }
+    ],
+
+    'plaza-cafe': [
+        {
+            from: 'loyalty@cafeclub.coffee',
+            subject: 'CafeClub®: Loyalty Profile Created',
+            body: 'Your caffeine intake is now a dataset.\n\nWe will:\n- Predict your next craving\n- Adjust prices by your desperation\n- Email you when you are most likely to cave',
+            type: 'ads'
+        }
+    ],
+    'plaza-arcade': [
+        {
+            from: 'games@arcadeid.fun',
+            subject: 'ArcadeID: Gaming Habits Tracked',
+            body: 'Every token, every loss, every win:\n- Logged\n- Analyzed\n- Sold as a "player engagement" insight',
+            type: 'system'
+        }
+    ],
+    'plaza-exit': [
+        {
+            from: 'routes@transithub.app',
+            subject: 'TransitHub™: Movement Profile Updated',
+            body: 'Leaving the plaza changed your mobility graph.\n\nWe now recommend:\n- Ads along your usual routes\n- Stores you walk past but never enter\n- Ways to monetize your commute',
+            type: 'ads'
+        }
+    ],
+
+    'final-exit': [
+        {
+            from: 'summary@endofline.services',
+            subject: 'EndOfLine Services: Lifetime Report Ready',
+            body: 'Your journey is complete.\n\nHighlights:\n- Number of systems you logged into\n- Total profiles generated\n- How much your data was worth (to everyone but you)',
+            type: 'system'
+        }
+    ]
+};
+
 // ============================================================================
 // LOCATIONS DATA
 // ============================================================================
@@ -97,22 +292,23 @@ const locations = {
     bed: {
         name: "Your Bed",
         background: "linear-gradient(135deg, #3d3d5c 0%, #2d2d4d 100%)",
+        backgroundImage: "assets/bedroom.png",
         hotspots: [
             {
                 id: 'sleep-bed',
-                label: '🛏️ Sleep',
-                x: '40%',
+                label: '🛏️ Bed',
+                x: '73%',
                 y: '45%',
                 width: '20%',
-                height: '30%'
+                height: '35%'
             },
             {
                 id: 'phone-on-bed',
-                label: '📱 Phone',
-                x: '60%',
-                y: '50%',
-                width: '12%',
-                height: '15%'
+                label: '📺 TV / Phone',
+                x: '75%',
+                y: '1%',
+                width: '30%',
+                height: '35%'
             }
         ],
         dialogue: {
@@ -124,10 +320,11 @@ const locations = {
     room: {
         name: "Your Room",
         background: "linear-gradient(135deg, #4a5568 0%, #2d3748 100%)",
+        backgroundImage: "assets/bedroom.png",
         hotspots: [
             {
                 id: 'room-door',
-                label: '🚪 Door',
+                label: '🚪 Bedroom Door',
                 x: '70%',
                 y: '40%',
                 width: '15%',
@@ -162,6 +359,7 @@ const locations = {
     house: {
         name: "Your House",
         background: "linear-gradient(135deg, #5a6f7d 0%, #3a4f5d 100%)",
+        backgroundImage: "assets/outsideBedroom.png",
         hotspots: [
             {
                 id: 'house-door',
@@ -173,7 +371,7 @@ const locations = {
             },
             {
                 id: 'house-kitchen',
-                label: '🍳 Kitchen',
+                label: '🧊 Fridge',
                 x: '25%',
                 y: '60%',
                 width: '18%',
@@ -181,7 +379,7 @@ const locations = {
             },
             {
                 id: 'house-mirror',
-                label: '🪞 Mirror',
+                label: '📖 Book',
                 x: '70%',
                 y: '45%',
                 width: '12%',
@@ -200,10 +398,11 @@ const locations = {
     outside: {
         name: "Outside - Neighborhood",
         background: "linear-gradient(135deg, #7cb342 0%, #558b2f 100%)",
+        backgroundImage: "assets/town.png",
         hotspots: [
             {
                 id: 'flowers',
-                label: '🌸 Flowers',
+                label: '🌳 Forest',
                 x: '15%',
                 y: '65%',
                 width: '12%',
@@ -211,7 +410,7 @@ const locations = {
             },
             {
                 id: 'park',
-                label: '🎪 Park',
+                label: '🏋️ Gym',
                 x: '40%',
                 y: '55%',
                 width: '16%',
@@ -219,7 +418,7 @@ const locations = {
             },
             {
                 id: 'mart-door',
-                label: '🏪 Poké Mart',
+                label: '🏪 Mart',
                 x: '70%',
                 y: '45%',
                 width: '20%',
@@ -227,7 +426,7 @@ const locations = {
             },
             {
                 id: 'npc-stranger',
-                label: '👤 Stranger',
+                label: '🏠 Friend\'s House',
                 x: '50%',
                 y: '30%',
                 width: '12%',
@@ -248,6 +447,7 @@ const locations = {
     park: {
         name: "Pokémon Park",
         background: "linear-gradient(135deg, #66bb6a 0%, #43a047 100%)",
+        backgroundImage: "assets/town.png",
         hotspots: [
             {
                 id: 'park-playground',
@@ -285,6 +485,7 @@ const locations = {
     mart: {
         name: "Poké Mart",
         background: "linear-gradient(135deg, #ff6f00 0%, #e65100 100%)",
+        backgroundImage: "assets/town.png",
         hotspots: [
             {
                 id: 'mart-shelf-1',
@@ -332,6 +533,7 @@ const locations = {
     plaza: {
         name: "Shopping Plaza",
         background: "linear-gradient(135deg, #b0bec5 0%, #78909c 100%)",
+        backgroundImage: "assets/town.png",
         hotspots: [
             {
                 id: 'plaza-cafe',
@@ -369,6 +571,7 @@ const locations = {
     final: {
         name: "End of the Line",
         background: "linear-gradient(135deg, #424242 0%, #212121 100%)",
+        backgroundImage: "assets/town.png",
         hotspots: [
             {
                 id: 'final-exit',
@@ -551,25 +754,33 @@ function generateEmails(userEmail) {
 // DIALOGUE SYSTEM
 // ============================================================================
 
-function showDialogue(text, callback) {
+// tone: 'green' (default) or 'red' depending on how malicious the message is.
+// Supports showDialogue(text, callback, tone) or showDialogue(text, tone).
+function showDialogue(text, callback, tone) {
+    if (typeof callback === 'string' && tone === undefined) {
+        tone = callback;
+        callback = null;
+    }
+
+    // Be defensive: always coerce text to a usable string so
+    // a missing dialogue line can't break the typewriter.
+    if (text === undefined || text === null) {
+        text = '';
+    } else if (typeof text !== 'string') {
+        text = String(text);
+    }
+
     const dialogueBox = document.getElementById('dialogueBox');
     const dialogueText = document.getElementById('dialogueText');
+    const appliedTone = tone === 'red' ? 'red' : 'green';
     
     dialogueBox.style.display = 'block';
-    dialogueText.innerHTML = '';
-    
-    let charIndex = 0;
-    const typeInterval = 30; // ms per character
-    
-    function typeCharacter() {
-        if (charIndex < text.length) {
-            dialogueText.innerHTML += text[charIndex];
-            charIndex++;
-            setTimeout(typeCharacter, typeInterval);
-        }
-    }
-    
-    typeCharacter();
+    dialogueBox.classList.remove('dialogue-red', 'dialogue-green');
+    dialogueBox.classList.add(appliedTone === 'red' ? 'dialogue-red' : 'dialogue-green');
+
+    // Simple render: write full text at once to avoid any
+    // timing issues with the typewriter effect.
+    dialogueText.textContent = text;
     
     // Click to continue
     const continueHandler = () => {
@@ -660,6 +871,29 @@ function renderEmailList() {
     });
 }
 
+// Send emails associated with a specific system login event
+function sendServiceEmails(serviceId) {
+    const templates = serviceEmailTemplates[serviceId];
+    if (!templates || !templates.length) return;
+
+    const now = new Date();
+
+    templates.forEach((tpl, index) => {
+        const email = {
+            id: Date.now() + index,
+            from: tpl.from,
+            subject: tpl.subject,
+            body: tpl.body,
+            time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            read: false,
+            type: tpl.type || 'system'
+        };
+        emailsData.push(email);
+    });
+
+    renderEmailList();
+}
+
 function showEmailDetail(emailId) {
     const email = emailsData.find(e => e.id === emailId);
     if (!email) return;
@@ -696,7 +930,7 @@ function completeLogin() {
     const password = document.getElementById('loginPasswordInput').value;
 
     if (!email || !password) {
-        alert('Please enter email and password');
+        showDialogue('Please enter email and password.', 'red');
         return;
     }
 
@@ -704,7 +938,7 @@ function completeLogin() {
     const expectedPassword = gameState.userPassword || defaultCredentials.password;
 
     if (email !== expectedEmail || password !== expectedPassword) {
-        alert(`Invalid credentials. Try ${expectedEmail} / ${expectedPassword}`);
+        showDialogue(`Invalid credentials. Try ${expectedEmail} / ${expectedPassword}`, 'red');
         return;
     }
 
@@ -713,6 +947,8 @@ function completeLogin() {
     // If a specific service was asking for login, mark it as authenticated
     if (gameState.pendingService) {
         gameState.serviceLogins[gameState.pendingService] = true;
+        // Trigger emails for this service login event
+        sendServiceEmails(gameState.pendingService);
     }
 
     document.getElementById('phoneLoginState').style.display = 'none';
@@ -727,7 +963,7 @@ function completeLogin() {
     // Clear pending service after handling message
     gameState.pendingService = null;
 
-    showDialogue(loginMessage, renderCurrentLocation);
+    showDialogue(loginMessage, renderCurrentLocation, 'red');
 }
 
 function sendSignupOTP() {
@@ -735,7 +971,7 @@ function sendSignupOTP() {
     const password = document.getElementById('signupPasswordInput').value;
 
     if (!email || !password) {
-        alert('Please enter email and password first');
+        showDialogue('Please enter email and password first.', 'red');
         return;
     }
 
@@ -759,23 +995,23 @@ function sendSignupOTP() {
 
     document.getElementById('signupOtpInput').style.display = 'block';
     document.getElementById('signupSubmitBtn').style.display = 'inline-block';
-    alert('OTP sent. Check inbox and enter it to finish signup.');
+    showDialogue('OTP sent. Check inbox and enter it to finish signup.', 'green');
 }
 
 function completeSignup() {
     if (!gameState.signupOtpSent) {
-        alert('Click Send OTP first');
+        showDialogue('Click Send OTP first.', 'red');
         return;
     }
 
     const otp = document.getElementById('signupOtpInput').value.trim();
     if (otp !== gameState.generatedOTP) {
-        alert('Incorrect OTP. Try 837429');
+        showDialogue('Incorrect OTP. Try 837429.', 'red');
         return;
     }
 
     document.getElementById('signupModal').style.display = 'none';
-    showDialogue('Signup complete. You can now log in using your email and password.');
+    showDialogue('Signup complete. You can now log in using your email and password.', 'green');
 }
 
 // ============================================================================
@@ -786,8 +1022,14 @@ function renderCurrentLocation() {
     const location = locations[gameState.currentLocation];
     const gameCanvas = document.getElementById('gameCanvas');
     
-    gameCanvas.style.backgroundImage = `url('')`;
-    gameCanvas.style.background = location.background;
+    gameCanvas.style.background = location.background || '#000';
+    if (location.backgroundImage) {
+        gameCanvas.style.backgroundImage = `url('${location.backgroundImage}')`;
+        gameCanvas.style.backgroundSize = 'cover';
+        gameCanvas.style.backgroundPosition = 'center';
+    } else {
+        gameCanvas.style.backgroundImage = 'none';
+    }
     
     // Render hotspots
     const hotspotsContainer = document.getElementById('hotspotsContainer');
@@ -1075,7 +1317,7 @@ function purchaseItem(itemName, price) {
     
     const randomMsg = messages[Math.floor(Math.random() * messages.length)];
     closeMartModal();
-    showDialogue(randomMsg);
+    showDialogue(randomMsg, 'red');
 }
 
 // ============================================================================
@@ -1083,8 +1325,11 @@ function purchaseItem(itemName, price) {
 // ============================================================================
 
 function showBlockedModal(message) {
+    // Show the warning in the dialogue box and also surface
+    // the blocked modal so the player can choose to log in.
     document.getElementById('blockedMessage').textContent = message;
     document.getElementById('blockedModal').style.display = 'flex';
+    showDialogue(message, 'red');
 }
 
 function closeBlockedModal() {
@@ -1103,11 +1348,14 @@ document.getElementById('blockedLoginBtn').addEventListener('click', () => {
 function selectRace(race) {
     gameState.race = race;
     document.getElementById('raceSelectModal').style.display = 'none';
-    
+
+    // Seed inbox and then start game with an initial (red) narration.
+    initializeEmails(gameState.userEmail || defaultCredentials.email);
+    renderEmailList();
+
     showDialogue(`You have become a ${race}. Everything you do will now require your data.`, () => {
         renderCurrentLocation();
-        renderEmailList();
-    });
+    }, 'red');
 }
 
 document.querySelectorAll('.race-btn').forEach(btn => {
@@ -1141,7 +1389,7 @@ document.getElementById('phoneNavWeb').addEventListener('click', () => {
     document.getElementById('phoneNavWeb').classList.add('active');
     document.getElementById('phoneNavEmail').classList.remove('active');
     // Web view would show here (placeholder for now)
-    alert('Web browser not yet implemented. Stay tuned for data harvesting v2.0!');
+    showDialogue('Web browser not yet implemented. Stay tuned for data harvesting v2.0!', 'green');
 });
 
 // ============================================================================

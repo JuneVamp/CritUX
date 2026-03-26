@@ -78,13 +78,16 @@ body {
 .phone-frame {
     width: 100%;
     height: 90%;
-    background: #000;
-    border-radius: 40px;
-    border: 12px solid #333;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    background-image: url('assets/PhoneFrame.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    /* border-radius: 40px; */
+    /* box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8); */
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    padding: 70px 40px 100px 40px;
 }
 
 .phone-status-bar {
@@ -341,17 +344,20 @@ body {
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.9);
-    border: 2px solid #fff;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 600px;
+    width: 600px;
+    max-width: 90vw;
+    height: 150px;
+    background-image: url('assets/dialogboxes.png');
+    background-repeat: no-repeat;
+    background-size: 100% 300%;
+    background-position: center top;
+    padding: 30px 40px 24px 40px;
     z-index: 1000;
     cursor: pointer;
 }
 
 .dialogue-content {
-    color: #fff;
+    color: #000;
 }
 
 #dialogueText {
@@ -366,6 +372,14 @@ body {
     color: #aaa;
     text-align: right;
     margin-top: 10px;
+}
+
+.dialogue-box.dialogue-red {
+    background-position-y: top;
+}
+
+.dialogue-box.dialogue-green {
+    background-position-y: bottom;
 }
 
 /* MODALS */
