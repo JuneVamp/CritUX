@@ -1448,12 +1448,19 @@ function autoLoginViaDialogue(serviceId) {
 
 function showBlockedModal(message, isRestriction) {
     // No visual modal anymore; just use the dialogue box.
-    // Clicking the dialogue will immediately proceed to the auto-login flow.
+    // For generic/login prompts, clicking proceeds to auto-login.
+    // For race-based restrictions, we only show the message and return.
     const serviceId = gameState.pendingService || null;
-    const tone = isRestriction ? 'restriction' : 'red';
-    showDialogue(message, () => {
-        autoLoginViaDialogue(serviceId);
-    }, tone);
+
+    if (isRestriction) {
+        showDialogue(message, () => {
+            renderCurrentLocation();
+        }, 'restriction');
+    } else {
+        showDialogue(message, () => {
+            autoLoginViaDialogue(serviceId);
+        }, 'red');
+    }
 }
 
 function closeBlockedModal() {
